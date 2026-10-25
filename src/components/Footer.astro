@@ -1,0 +1,47 @@
+---
+// Footer.astro
+const year = new Date().getFullYear();
+---
+<footer>
+	<div class="footer-content">
+		<p class="brand">Arethé Physis Studios &copy; {year}</p>
+		<p class="slogan">From waste to Virtue. By Nature.</p>
+		<div class="legal-links">
+			<a href="/legal/privacy">Privacy</a>
+			<a href="/legal/terms">Terms</a>
+			<a href="https://instagram.com" target="_blank">Instagram</a>
+		</div>
+	</div>
+</footer>
+
+<style>
+	footer {
+		background-color: var(--marron);
+		color: var(--beige);
+		padding: 3rem;
+		text-align: center;
+		font-size: 0.85rem;
+	}
+
+	.brand {
+		font-family: var(--font-display);
+		font-size: 1.2rem;
+		color: var(--blanco-roto);
+		margin-bottom: 0.5rem;
+	}
+
+	.slogan {
+		margin-bottom: 1.5rem;
+		opacity: 0.7;
+	}
+
+	.legal-links {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	.legal-links a:hover {
+		color: var(--turquesa);
+	}
+</style>

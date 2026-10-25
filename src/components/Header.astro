@@ -1,0 +1,64 @@
+---
+// Header.astro
+---
+<header>
+	<a href="/" class="logo">Arethé</a>
+	<nav>
+		<a href="/collection">Collection</a>
+		<a href="/process">Process</a>
+		<a href="/impact">Impact</a>
+		<a href="/about">About</a>
+		<a href="/customize" class="btn-nav">Customize</a>
+	</nav>
+</header>
+
+<style>
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1.5rem 3rem;
+		background-color: var(--blanco-roto);
+		border-bottom: 1px solid var(--beige);
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+
+	.logo {
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		font-weight: 600;
+		letter-spacing: -0.5px;
+	}
+
+	nav {
+		display: flex;
+		gap: 2rem;
+		align-items: center;
+		font-size: 0.9rem;
+		font-weight: 400;
+	}
+
+	nav a:hover {
+		color: var(--turquesa);
+		transition: color 0.2s ease;
+	}
+
+	.btn-nav {
+		background-color: var(--marron);
+		color: var(--blanco-roto);
+		padding: 0.5rem 1.2rem;
+		border-radius: 2rem;
+	}
+
+	.btn-nav:hover {
+		background-color: var(--turquesa);
+		color: var(--marron);
+	}
+
+	@media (max-width: 768px) {
+		header { padding: 1rem; flex-direction: column; gap: 1rem; }
+		nav { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+	}
+</style>

@@ -1,5 +1,8 @@
 ---
 // Layout.astro
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
 const { title = "Arethé Physis Studios" } = Astro.props;
 ---
 <!DOCTYPE html>
@@ -9,13 +12,16 @@ const { title = "Arethé Physis Studios" } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="From waste to Virtue. By Nature. Upcycled streetwear." />
 		<title>{title}</title>
-		<!-- Tipografías: Una editorial para títulos, una limpia para textos -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 	</head>
 	<body>
-		<slot />
+		<Header />
+		<main>
+			<slot />
+		</main>
+		<Footer />
 	</body>
 </html>
 
@@ -32,7 +38,6 @@ const { title = "Arethé Physis Studios" } = Astro.props;
 		--font-body: 'Inter', sans-serif;
 	}
 
-	/* Reset básico minimalista */
 	* {
 		margin: 0;
 		padding: 0;
@@ -45,6 +50,13 @@ const { title = "Arethé Physis Studios" } = Astro.props;
 		font-family: var(--font-body);
 		line-height: 1.6;
 		-webkit-font-smoothing: antialiased;
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+	}
+
+	main {
+		flex: 1; /* Para que el footer siempre quede abajo */
 	}
 
 	h1, h2, h3 {
