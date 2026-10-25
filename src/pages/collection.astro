@@ -1,0 +1,173 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// 10 productos de prueba (Dummy data)
+const products = [
+	{ id: 1, title: "Reconstructed Denim Jacket", price: "€85", tag: "One of One", img: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop" },
+	{ id: 2, title: "Upcycled Cargo Pants", price: "€65", tag: "Deadstock", img: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800&auto=format&fit=crop" },
+	{ id: 3, title: "Patchwork Hoodie", price: "€70", tag: "Custom", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800&auto=format&fit=crop" },
+	{ id: 4, title: "Vintage Graphic Tee", price: "€35", tag: "Rescued", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" },
+	{ id: 5, title: "Cropped Bomber Jacket", price: "€95", tag: "One of One", img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop" },
+	{ id: 6, title: "Oversized Knit Sweater", price: "€55", tag: "Upcycled", img: "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=800&auto=format&fit=crop" },
+	{ id: 7, title: "Distressed Wide-Leg Jeans", price: "€75", tag: "Deadstock", img: "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop" },
+	{ id: 8, title: "Asymmetric Midi Skirt", price: "€45", tag: "Rescued", img: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=800&auto=format&fit=crop" },
+	{ id: 9, title: "Utility Vest", price: "€60", tag: "Custom", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop" },
+	{ id: 10, title: "Embroidered Trench Coat", price: "€120", tag: "One of One", img: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop" }
+];
+---
+<Layout title="Collection | Arethé Physis Studios">
+	<main class="collection-page">
+		
+		<!-- Cabecera de la colección -->
+		<header class="page-header">
+			<h1>The <span class="accent">Collection</span></h1>
+			<p>Exclusive, one-of-one upcycled pieces. Once it's gone, it's gone forever.</p>
+		</header>
+
+		<!-- Grid de productos -->
+		<section class="product-grid">
+			{products.map((product) => (
+				<a href={`/collection/${product.id}`} class="product-card">
+					<div class="image-wrapper">
+						<img src={product.img} alt={product.title} loading="lazy" />
+						<span class="tag">{product.tag}</span>
+					</div>
+					<div class="product-info">
+						<h2>{product.title}</h2>
+						<p class="price">{product.price}</p>
+					</div>
+				</a>
+			))}
+		</section>
+
+	</main>
+</Layout>
+
+<style>
+	.collection-page {
+		padding: 6rem 5%;
+		background-color: var(--blanco-roto);
+		min-height: 100vh;
+	}
+
+	.page-header {
+		text-align: center;
+		margin-bottom: 5rem;
+	}
+
+	.page-header h1 {
+		font-size: 4rem;
+		margin-bottom: 1rem;
+		letter-spacing: -2px;
+	}
+
+	.accent {
+		font-style: italic;
+		color: var(--turquesa);
+	}
+
+	.page-header p {
+		font-size: 1.1rem;
+		opacity: 0.7;
+		max-width: 500px;
+		margin: 0 auto;
+	}
+
+	/* Grid de Productos (4 Columnas) */
+	.product-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr); /* Fuerza 4 columnas en escritorio */
+		gap: 3rem 1.5rem; /* Espacio entre filas y columnas */
+	}
+
+	.product-card {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.image-wrapper {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 3 / 4;
+		border-radius: 12px; /* Un poco menos redondeado para que las fotos respiren */
+		overflow: hidden;
+		background-color: var(--beige);
+		margin-bottom: 1rem;
+	}
+
+	.image-wrapper img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	/* Efecto hover: la foto hace zoom */
+	.product-card:hover .image-wrapper img {
+		transform: scale(1.05);
+	}
+
+	/* Etiqueta flotante (Tag) */
+	.tag {
+		position: absolute;
+		top: 0.8rem;
+		left: 0.8rem;
+		background-color: var(--blanco-roto);
+		color: var(--marron);
+		padding: 0.3rem 0.8rem;
+		border-radius: 50px;
+		font-size: 0.65rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		z-index: 10;
+	}
+
+	/* Información del producto */
+	.product-info {
+		display: flex;
+		flex-direction: column; /* Título arriba, precio abajo para ahorrar espacio */
+		gap: 0.3rem;
+		padding: 0 0.2rem;
+	}
+
+	.product-info h2 {
+		font-size: 1rem;
+		font-family: var(--font-body);
+		font-weight: 400;
+		transition: color 0.3s ease;
+		line-height: 1.3;
+	}
+
+	.product-card:hover .product-info h2 {
+		color: var(--turquesa);
+	}
+
+	.price {
+		font-weight: 600;
+		font-size: 0.95rem;
+		opacity: 0.8;
+	}
+
+	/* RESPONSIVE (Tablet y Móvil) */
+	@media (max-width: 1024px) {
+		.product-grid {
+			grid-template-columns: repeat(3, 1fr); /* 3 columnas en tablets */
+		}
+	}
+
+	@media (max-width: 768px) {
+		.collection-page { padding: 4rem 1.5rem; }
+		.page-header h1 { font-size: 3rem; }
+		.product-grid {
+			grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles grandes */
+			gap: 2rem 1rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.product-grid {
+			grid-template-columns: 1fr; /* 1 columna en móviles pequeños */
+		}
+	}
+</style>
