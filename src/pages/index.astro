@@ -1,22 +1,66 @@
 ---
-// index.astro
 import Layout from '../layouts/Layout.astro';
 ---
 <Layout title="Arethé Physis Studios | Home">
-	<main style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem;">
-		
-		<h1 style="font-size: 4rem; margin-bottom: 1rem; max-width: 800px;">
-			From waste to Virtue.<br/>
-			<span style="font-style: italic; color: var(--turquesa);">By Nature.</span>
-		</h1>
-		
-		<p style="font-size: 1.2rem; margin-bottom: 2rem; max-width: 500px;">
-			Upcycled streetwear, made one at a time.
-		</p>
+	
+	<!-- 1. HERO (Ya lo teníamos) -->
+	<section class="hero">
+		<h1>From waste to Virtue.<br/><span class="accent">By Nature.</span></h1>
+		<p>Upcycled streetwear, made one at a time.</p>
+		<a href="/collection" class="btn">Explore the collection</a>
+	</section>
 
-		<button style="background-color: var(--marron); color: var(--blanco-roto); padding: 1rem 2rem; border: none; border-radius: 4px; font-family: var(--font-body); font-size: 1rem; cursor: pointer; transition: background 0.3s ease;">
-			Explore the collection
-		</button>
+	<!-- 2. MANIFIESTO -->
+	<section class="manifesto">
+		<h2>We believe in the virtue of nature.</h2>
+		<p>Fast fashion is broken. We take discarded textiles and deadstock clothing to create exclusive, one-of-one pieces. No two items are the same, because your style shouldn't be either.</p>
+	</section>
 
-	</main>
+	<!-- 3. PROCESO (3 pasos) -->
+	<section class="process">
+		<div class="step">
+			<span class="num">01</span>
+			<h3>Source</h3>
+			<p>We rescue high-quality second-hand garments and textile waste.</p>
+		</div>
+		<div class="step">
+			<span class="num">02</span>
+			<h3>Transform</h3>
+			<p>We deconstruct and redesign, turning waste into modern silhouettes.</p>
+		</div>
+		<div class="step">
+			<span class="num">03</span>
+			<h3>Personalize</h3>
+			<p>Add your custom patches and embroidery to make it uniquely yours.</p>
+		</div>
+	</section>
+
 </Layout>
+
+<style>
+	/* Estilos del Hero (para que quede centrado como antes) */
+	.hero {
+		height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem;
+	}
+	.hero h1 { font-size: 4rem; margin-bottom: 1rem; max-width: 800px; }
+	.accent { font-style: italic; color: var(--turquesa); }
+	.hero p { font-size: 1.2rem; margin-bottom: 2rem; }
+	.btn { background-color: var(--marron); color: var(--blanco-roto); padding: 1rem 2rem; border-radius: 4px; transition: background 0.3s ease; }
+	.btn:hover { background-color: var(--turquesa); color: var(--marron); }
+
+	/* Estilos del Manifiesto */
+	.manifesto { padding: 6rem 2rem; background-color: var(--beige); text-align: center; }
+	.manifesto h2 { font-size: 2.5rem; margin-bottom: 1.5rem; }
+	.manifesto p { max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+
+	/* Estilos del Proceso */
+	.process { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; padding: 6rem 4rem; background-color: var(--blanco-roto); }
+	.step { padding: 2rem; border-top: 2px solid var(--marron); }
+	.num { font-family: var(--font-display); font-size: 2rem; color: var(--turquesa); font-weight: 600; display: block; margin-bottom: 1rem; }
+	.step h3 { font-size: 1.5rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+	
+	@media (max-width: 768px) {
+		.hero h1 { font-size: 2.5rem; }
+		.process { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+	}
+</style>
