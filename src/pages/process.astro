@@ -1,0 +1,228 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Our Process | Arethé Physis Studios">
+	<main class="process-page">
+		
+		<!-- Cabecera Editorial -->
+		<header class="process-header">
+			<span class="tagline">The Circular Journey</span>
+			<h1>How we make <br/><span class="accent">the magic</span> happen.</h1>
+			<p>We don't just make clothes. We rescue stories, deconstruct the past, and stitch it into the future.</p>
+		</header>
+
+		<!-- Timeline Orgánica -->
+		<section class="timeline">
+			
+			<!-- Paso 1 -->
+			<div class="step-row">
+				<div class="step-text">
+					<span class="step-num">01</span>
+					<h2>Source</h2>
+					<p>We hunt for high-quality second-hand garments, deadstock fabrics, and textile waste that would otherwise end up in landfills. Every piece has a past.</p>
+				</div>
+				<div class="step-visual beige-blob">
+					<!-- Placeholder para la ilustración de Fatma (V7) -->
+					<span>Illustration Here</span>
+				</div>
+			</div>
+
+			<!-- Paso 2 -->
+			<div class="step-row reverse">
+				<div class="step-text">
+					<span class="step-num">02</span>
+					<h2>Transform</h2>
+					<p>We deconstruct the garments, cut them up, and redesign them. We combine different textures and silhouettes to give them a completely new life.</p>
+				</div>
+				<div class="step-visual turquoise-blob">
+					<!-- Placeholder para la ilustración de Fatma (V7) -->
+					<span>Illustration Here</span>
+				</div>
+			</div>
+
+			<!-- Paso 3 -->
+			<div class="step-row">
+				<div class="step-text">
+					<span class="step-num">03</span>
+					<h2>Personalize</h2>
+					<p>The final touch. We add custom patches, hand embroidery, and digital prints. You get a 1-of-1 piece that nobody else in the world owns.</p>
+				</div>
+				<div class="step-visual yellow-blob">
+					<!-- Placeholder para la ilustración de Fatma (V7) -->
+					<span>Illustration Here</span>
+				</div>
+			</div>
+
+		</section>
+
+		<!-- CTA Final -->
+		<section class="process-cta">
+			<h2>Ready to wear the change?</h2>
+			<a href="/collection" class="btn">Explore the collection</a>
+		</section>
+
+	</main>
+</Layout>
+
+<style>
+	.process-page {
+		background-color: var(--blanco-roto);
+		min-height: 100vh;
+		padding-bottom: 8rem;
+	}
+
+	/* CABECERA */
+	.process-header {
+		text-align: center;
+		padding: 8rem 2rem 6rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.tagline {
+		display: block;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 3px;
+		font-weight: 600;
+		color: var(--marron);
+		opacity: 0.5;
+		margin-bottom: 1.5rem;
+	}
+
+	.process-header h1 {
+		font-size: 5rem;
+		line-height: 1;
+		letter-spacing: -2px;
+		margin-bottom: 2rem;
+	}
+
+	.accent {
+		font-style: italic;
+		color: var(--turquesa);
+	}
+
+	.process-header p {
+		font-size: 1.2rem;
+		opacity: 0.7;
+		line-height: 1.6;
+	}
+
+	/* TIMELINE */
+	.timeline {
+		max-width: 1000px;
+		margin: 0 auto;
+		padding: 0 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 8rem; /* Mucho espacio entre pasos */
+	}
+
+	.step-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 4rem;
+	}
+
+	/* Invertimos el orden para el paso 2 */
+	.step-row.reverse .step-text {
+		order: 2;
+	}
+	.step-row.reverse .step-visual {
+		order: 1;
+	}
+
+	/* Texto */
+	.step-num {
+		font-family: var(--font-display);
+		font-size: 2rem;
+		color: var(--turquesa);
+		font-weight: 600;
+		display: block;
+		margin-bottom: 1rem;
+	}
+
+	.step-text h2 {
+		font-size: 3rem;
+		margin-bottom: 1.5rem;
+		letter-spacing: -1px;
+	}
+
+	.step-text p {
+		font-size: 1.1rem;
+		line-height: 1.8;
+		opacity: 0.8;
+	}
+
+	/* Visuales (Burbujas Gigantes) */
+	.step-visual {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		font-weight: 600;
+		color: var(--marron);
+		opacity: 0.6;
+		/* La forma orgánica de la marca */
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+		animation: morph 8s ease-in-out infinite alternate;
+	}
+
+	/* Colores de los fondos */
+	.beige-blob { background-color: var(--beige); }
+	.turquoise-blob { background-color: var(--turquesa); }
+	.yellow-blob { background-color: var(--amarillo); }
+
+	@keyframes morph {
+		0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+		100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
+	}
+
+	/* CTA FINAL */
+	.process-cta {
+		margin-top: 10rem;
+		text-align: center;
+	}
+
+	.process-cta h2 {
+		font-size: 2.5rem;
+		margin-bottom: 2rem;
+		font-style: italic;
+	}
+
+	.btn {
+		display: inline-block;
+		background-color: var(--marron);
+		color: var(--blanco-roto);
+		padding: 1.2rem 3rem;
+		border-radius: 50px;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		transition: all 0.3s;
+	}
+
+	.btn:hover {
+		background-color: var(--turquesa);
+		color: var(--marron);
+		transform: translateY(-3px);
+	}
+
+	/* RESPONSIVE */
+	@media (max-width: 768px) {
+		.process-header h1 { font-size: 3.5rem; }
+		.step-row, .step-row.reverse {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+			text-align: center;
+		}
+		.step-row.reverse .step-text { order: 1; }
+		.step-row.reverse .step-visual { order: 2; }
+		.step-visual { max-width: 300px; margin: 0 auto; }
+	}
+</style>
