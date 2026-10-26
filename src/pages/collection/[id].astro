@@ -1,0 +1,70 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { products } from '../../data/products.js';
+
+export async function getStaticPaths() {
+	return products.map((product) => ({
+		params: { id: product.id.toString() },
+		props: { product },
+	}));
+}
+
+const { product } = Astro.props;
+---
+<Layout title={`${product.title} | Arethé`}>
+	<main class="product-detail">
+		
+		<div class="image-section">
+			<img src={product.img} alt={product.title} />
+		</div>
+
+		<div class="info-section">
+			<a href="/collection" class="back-link">&larr; Back to collection</a>
+			<span class="tag">{product.tag}</span>
+			<h1>{product.title}</h1>
+			<p class="price">{product.price}</p>
+			
+			<div class="description">
+				<p>This exclusive piece was rescued from deadstock and reimagined by our studio. Hand-finished details make this a true one-of-one garment.</p>
+				<ul>
+					<li><strong>Origin:</strong> Upcycled textile waste</li>
+					<li><strong>Technique:</strong> Deconstruction & hand embroidery</li>
+					<li><strong>Fit:</strong> Relaxed / Oversized</li>
+				</ul>
+			</div>
+
+			<div class="actions">
+				<a href={`/customize?id=${product.id}`} class="btn-customize">Customize this piece</a>
+				<button class="btn-cart">Add to cart</button>
+			</div>
+		</div>
+
+	</main>
+</Layout>
+
+<style>
+	.product-detail { display: grid; grid-template-columns: 1.2fr 1fr; min-height: 90vh; background-color: var(--blanco-roto); }
+	.image-section { background-color: var(--beige); display: flex; align-items: center; justify-content: center; padding: 4rem; }
+	.image-section img { width: 100%; max-width: 600px; height: auto; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+	.info-section { padding: 6rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+	.back-link { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; margin-bottom: 3rem; transition: opacity 0.3s; }
+	.back-link:hover { opacity: 1; }
+	.tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--turquesa); margin-bottom: 1rem; }
+	h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; }
+	.price { font-size: 1.5rem; font-weight: 300; margin-bottom: 3rem; opacity: 0.7; }
+	.description { font-size: 1rem; line-height: 1.8; opacity: 0.8; margin-bottom: 4rem; }
+	.description ul { margin-top: 1.5rem; padding-left: 1.2rem; }
+	.description li { margin-bottom: 0.5rem; }
+	.actions { display: flex; flex-direction: column; gap: 1rem; }
+	.btn-customize, .btn-cart { padding: 1.2rem; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; border: none; }
+	.btn-customize { background-color: var(--turquesa); color: var(--marron); }
+	.btn-customize:hover { background-color: var(--marron); color: var(--turquesa); transform: translateY(-2px); }
+	.btn-cart { background-color: transparent; color: var(--marron); border: 1px solid var(--marron); }
+	.btn-cart:hover { background-color: var(--marron); color: var(--blanco-roto); }
+	@media (max-width: 900px) {
+		.product-detail { grid-template-columns: 1fr; }
+		.image-section { padding: 2rem; }
+		.info-section { padding: 3rem 1.5rem; }
+		h1 { font-size: 2.5rem; }
+	}
+</style>

@@ -1,9 +1,8 @@
 ---
-// Layout.astro
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const { title = "Arethé Physis Studios" } = Astro.props;
+const { title = "Arethé Physis Studios", theme = "light" } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +15,7 @@ const { title = "Arethé Physis Studios" } = Astro.props;
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 	</head>
-	<body>
+	<body class={theme}>
 		<Header />
 		<main>
 			<slot />
@@ -26,23 +25,17 @@ const { title = "Arethé Physis Studios" } = Astro.props;
 </html>
 
 <style is:global>
-	/* Paleta de Arethé Physis Studios */
 	:root {
 		--turquesa: #6EE5BE;
 		--marron: #402211;
 		--amarillo: #FFD980;
 		--beige: #D9CECA;
 		--blanco-roto: #F9F8F6;
-		
 		--font-display: 'Playfair Display', serif;
 		--font-body: 'Inter', sans-serif;
 	}
 
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
+	* { margin: 0; padding: 0; box-sizing: border-box; }
 
 	body {
 		background-color: var(--blanco-roto);
@@ -55,18 +48,31 @@ const { title = "Arethé Physis Studios" } = Astro.props;
 		min-height: 100vh;
 	}
 
-	main {
-		flex: 1; /* Para que el footer siempre quede abajo */
-	}
+	main { flex: 1; }
+	h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.1; }
+	a { color: inherit; text-decoration: none; }
 
-	h1, h2, h3 {
-		font-family: var(--font-display);
-		font-weight: 600;
-		line-height: 1.1;
+	/* ESTILOS DEL TEMA AMARILLO (Solo para Collection) */
+	body.yellow-theme {
+		background-color: var(--amarillo);
 	}
-
-	a {
-		color: inherit;
-		text-decoration: none;
+	
+	/* Forzamos al Header y Footer a ser amarillos en este tema */
+	body.yellow-theme header {
+		background-color: var(--amarillo);
+		border-bottom: 1px solid var(--marron);
+	}
+	
+	body.yellow-theme footer {
+		background-color: var(--amarillo);
+		color: var(--marron);
+	}
+	
+	body.yellow-theme footer .brand {
+		color: var(--marron);
+	}
+	
+	body.yellow-theme footer .legal-links a:hover {
+		color: var(--blanco-roto);
 	}
 </style>

@@ -1,37 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// 10 productos de prueba (Dummy data)
-const products = [
-	{ id: 1, title: "Reconstructed Denim Jacket", price: "€85", tag: "One of One", img: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop" },
-	{ id: 2, title: "Upcycled Cargo Pants", price: "€65", tag: "Deadstock", img: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800&auto=format&fit=crop" },
-	{ id: 3, title: "Patchwork Hoodie", price: "€70", tag: "Custom", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800&auto=format&fit=crop" },
-	{ id: 4, title: "Vintage Graphic Tee", price: "€35", tag: "Rescued", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop" },
-	{ id: 5, title: "Cropped Bomber Jacket", price: "€95", tag: "One of One", img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop" },
-	{ id: 6, title: "Oversized Knit Sweater", price: "€55", tag: "Upcycled", img: "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=800&auto=format&fit=crop" },
-	{ id: 7, title: "Distressed Wide-Leg Jeans", price: "€75", tag: "Deadstock", img: "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=800&auto=format&fit=crop" },
-	{ id: 8, title: "Asymmetric Midi Skirt", price: "€45", tag: "Rescued", img: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=800&auto=format&fit=crop" },
-	{ id: 9, title: "Utility Vest", price: "€60", tag: "Custom", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop" },
-	{ id: 10, title: "Embroidered Trench Coat", price: "€120", tag: "One of One", img: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop" }
-];
+import { products } from '../data/products.js';
 ---
 <Layout title="Collection | Arethé Physis Studios">
 	<main class="collection-page">
 		
-		<!-- Cabecera de la colección -->
 		<header class="page-header">
 			<h1>The <span class="accent">Collection</span></h1>
 			<p>Exclusive, one-of-one upcycled pieces. Once it's gone, it's gone forever.</p>
 		</header>
 
-		<!-- Grid de productos -->
 		<section class="product-grid">
 			{products.map((product) => (
 				<a href={`/collection/${product.id}`} class="product-card">
-					<div class="image-wrapper">
-						<img src={product.img} alt={product.title} loading="lazy" />
-						<span class="tag">{product.tag}</span>
+					
+					<div class="card-visual">
+						{product.images ? (
+							product.images.map((img, index) => (
+								<div class={`bubble animated anim-${index}`}>
+									<img src={img} alt={product.title} />
+									<span class="tag">{product.tag}</span>
+								</div>
+							))
+						) : (
+							<div class="bubble static">
+								<img src={product.img} alt={product.title} />
+								<span class="tag">{product.tag}</span>
+							</div>
+						)}
 					</div>
+					
 					<div class="product-info">
 						<h2>{product.title}</h2>
 						<p class="price">{product.price}</p>
@@ -44,76 +42,121 @@ const products = [
 </Layout>
 
 <style>
+	/* FONDO AMARILLO PARA TODA LA PÁGINA */
 	.collection-page {
 		padding: 6rem 5%;
-		background-color: var(--blanco-roto);
+		background-color: var(--amarillo); /* El amarillo de la marca */
 		min-height: 100vh;
 	}
 
 	.page-header {
 		text-align: center;
-		margin-bottom: 5rem;
+		margin-bottom: 6rem;
 	}
 
 	.page-header h1 {
 		font-size: 4rem;
 		margin-bottom: 1rem;
 		letter-spacing: -2px;
+		color: var(--marron);
 	}
 
 	.accent {
 		font-style: italic;
-		color: var(--turquesa);
+		color: var(--blanco-roto); /* Blanco para que resalte sobre el amarillo */
+		text-shadow: 1px 1px 0px var(--marron); /* Un toque de sombra para el contraste */
 	}
 
 	.page-header p {
-		font-size: 1.1rem;
-		opacity: 0.7;
+		font-size: 1rem;
+		color: var(--marron);
+		opacity: 0.8;
 		max-width: 500px;
 		margin: 0 auto;
 	}
 
-	/* Grid de Productos (4 Columnas) */
 	.product-grid {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr); /* Fuerza 4 columnas en escritorio */
-		gap: 3rem 1.5rem; /* Espacio entre filas y columnas */
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		gap: 5rem 3rem;
+		justify-items: center;
 	}
 
 	.product-card {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		max-width: 260px;
 	}
 
-	.image-wrapper {
+	.card-visual {
 		position: relative;
 		width: 100%;
-		aspect-ratio: 3 / 4;
-		border-radius: 12px; /* Un poco menos redondeado para que las fotos respiren */
-		overflow: hidden;
-		background-color: var(--beige);
-		margin-bottom: 1rem;
+		aspect-ratio: 1 / 1;
+		margin-bottom: 1.5rem;
 	}
 
-	.image-wrapper img {
+	/* BURBUJA BASE */
+	.bubble {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+		overflow: hidden;
+		background-color: var(--beige);
+		/* Transiciones para el hover */
+		transition: border-radius 0.4s ease, box-shadow 0.4s ease;
+	}
+
+	.bubble img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		pointer-events: none;
 	}
 
-	/* Efecto hover: la foto hace zoom */
-	.product-card:hover .image-wrapper img {
-		transform: scale(1.05);
+	/* ESTÁTICAS */
+	.bubble.static {
+		animation: breathe 6s ease-in-out infinite alternate;
 	}
 
-	/* Etiqueta flotante (Tag) */
+	/* ANIMADAS (Cruce exagerado y respiración) */
+	/* Asignamos DOS animaciones separadas por coma: el ciclo y la respiración */
+		.bubble.animated {
+		animation-duration: 10s; /* Ahora tarda 5s en mostrarse cada foto */
+		animation-iteration-count: infinite;
+		animation-timing-function: ease-in-out;
+	}
+
+	/* Imagen 1 */
+	.bubble.animated.anim-0 {
+		animation-name: syncCycleA, breathe;
+	}
+
+	/* Imagen 2 */
+	.bubble.animated.anim-1 {
+		animation-name: syncCycleB, breathe;
+	}
+
+	/* EFECTO HOVER: Pausa y círculo */
+	.product-card:hover .bubble.animated {
+		animation-play-state: paused;
+	}
+
+	.product-card:hover .bubble {
+		border-radius: 50%;
+		box-shadow: 0 15px 30px rgba(64, 34, 17, 0.2); /* Sombra más fuerte para el amarillo */
+	}
+
 	.tag {
 		position: absolute;
-		top: 0.8rem;
-		left: 0.8rem;
-		background-color: var(--blanco-roto);
-		color: var(--marron);
+		top: 15%;
+		left: 15%;
+		background-color: var(--marron); /* Etiqueta marrón para contrastar con amarillo */
+		color: var(--blanco-roto);
 		padding: 0.3rem 0.8rem;
 		border-radius: 50px;
 		font-size: 0.65rem;
@@ -123,51 +166,58 @@ const products = [
 		z-index: 10;
 	}
 
-	/* Información del producto */
+	/* ANIMACIONES */
+	@keyframes breathe {
+		0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+		100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
+	}
+
+	/* Imagen A: Visible del 0 al 45%. Desaparece de golpe al 50%. Vuelve al 100%. */
+	@keyframes syncCycleA {
+		0%, 45% { opacity: 1; transform: scale(1); }
+		50%, 95% { opacity: 0; transform: scale(0.2); } /* Se hace diminuta al irse */
+		100% { opacity: 1; transform: scale(1); }
+	}
+
+	/* Imagen B: Oculta del 0 al 45%. Aparece de golpe al 50%. Crece. Se va al 100%. */
+	@keyframes syncCycleB {
+		0%, 45% { opacity: 0; transform: scale(0.2); } /* Espera diminuta */
+		50%, 95% { opacity: 1; transform: scale(1); } /* Crece exageradamente al entrar */
+		100% { opacity: 0; transform: scale(0.2); }
+	}
+
+	/* INFO */
 	.product-info {
 		display: flex;
-		flex-direction: column; /* Título arriba, precio abajo para ahorrar espacio */
-		gap: 0.3rem;
-		padding: 0 0.2rem;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 0.2rem;
 	}
 
 	.product-info h2 {
-		font-size: 1rem;
+		font-size: 0.95rem;
 		font-family: var(--font-body);
-		font-weight: 400;
+		font-weight: 500;
+		color: var(--marron); /* Texto marrón sobre fondo amarillo */
 		transition: color 0.3s ease;
 		line-height: 1.3;
 	}
 
-	.product-card:hover .product-info h2 {
-		color: var(--turquesa);
+	.product-card:hover .product-info h2 { 
+		color: var(--blanco-roto); 
 	}
 
 	.price {
 		font-weight: 600;
-		font-size: 0.95rem;
-		opacity: 0.8;
-	}
-
-	/* RESPONSIVE (Tablet y Móvil) */
-	@media (max-width: 1024px) {
-		.product-grid {
-			grid-template-columns: repeat(3, 1fr); /* 3 columnas en tablets */
-		}
+		font-size: 0.85rem;
+		color: var(--marron);
+		opacity: 0.7;
 	}
 
 	@media (max-width: 768px) {
 		.collection-page { padding: 4rem 1.5rem; }
 		.page-header h1 { font-size: 3rem; }
-		.product-grid {
-			grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles grandes */
-			gap: 2rem 1rem;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.product-grid {
-			grid-template-columns: 1fr; /* 1 columna en móviles pequeños */
-		}
+		.product-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem 1rem; }
 	}
 </style>
