@@ -10,9 +10,7 @@ import Layout from '../layouts/Layout.astro';
 		</header>
 
 		<div class="cart-container">
-			<!-- Aquí JavaScript inyectará los productos -->
 			<div id="cart-items-container" class="cart-items">
-				<!-- Estado vacío (se oculta si hay productos) -->
 				<div id="empty-cart" class="empty-state">
 					<div class="empty-blob beige-blob"></div>
 					<h2>Your cart is empty</h2>
@@ -21,7 +19,6 @@ import Layout from '../layouts/Layout.astro';
 				</div>
 			</div>
 
-			<!-- Resumen de Pago (Solo visible si hay items) -->
 			<aside id="cart-summary" class="cart-summary" style="display: none;">
 				<h2>Order Summary</h2>
 				<div class="summary-row">
@@ -41,7 +38,6 @@ import Layout from '../layouts/Layout.astro';
 			</aside>
 		</div>
 
-		<!-- Modal de Checkout Simulado -->
 		<div id="checkout-modal" class="modal" style="display: none;">
 			<div class="modal-content">
 				<div class="check-icon">✓</div>
@@ -65,11 +61,9 @@ import Layout from '../layouts/Layout.astro';
 		const checkoutModal = document.getElementById('checkout-modal');
 		const btnCloseModal = document.getElementById('btn-close-modal');
 
-		// 1. Leer el carrito del localStorage
 		let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
 
 		function renderCart() {
-			// Limpiamos el contenedor (dejando el empty-state)
 			const existingItems = cartItemsContainer.querySelectorAll('.cart-item');
 			existingItems.forEach(item => item.remove());
 
@@ -83,19 +77,38 @@ import Layout from '../layouts/Layout.astro';
 			cartSummary.style.display = 'block';
 
 			let total = 0;
-
 			cart.forEach((item, index) => {
-				// Extraer el número del precio (ej. "€85" -> 85)
 				const priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
 				total += priceNum;
 
 				const itemEl = document.createElement('div');
 				itemEl.classList.add('cart-item');
 				
-				// Si es una customización, mostramos un borde distinto o info extra
+				let imageHTML = '';
+				
+				if (item.isCustom) {
+					// Verificamos si baseGarment es una URL de imagen o un texto de placeholder
+					const isRealImage = !item.baseGarment.startsWith('[');
+					
+					const baseHTML = isRealImage 
+						? `<img src="${item.baseGarment}" class="mini-base-img" />` 
+						: `<div class="mini-base">${item.baseGarment}</div>`;
+
+					imageHTML = `
+						<div class="mini-canvas">
+							${baseHTML}
+							<div class="mini-patch" style="left: ${item.patchLeft}%; top: ${item.patchTop}%; transform: translate(-50%, -50%) scale(${item.patchScale * 0.4});">
+								${item.patchSrc}
+							</div>
+						</div>
+					`;
+				} else {
+					imageHTML = item.image.startsWith('[') ? `<div class="placeholder-mini">${item.image}</div>` : `<img src="${item.image}" />`;
+				}
+
 				itemEl.innerHTML = `
 					<div class="item-image">
-						${item.image.startsWith('[') ? `<div class="placeholder-mini">${item.image}</div>` : `<img src="${item.image}" />`}
+						${imageHTML}
 					</div>
 					<div class="item-details">
 						<h3>${item.title}</h3>
@@ -108,141 +121,203 @@ import Layout from '../layouts/Layout.astro';
 				cartItemsContainer.appendChild(itemEl);
 			});
 
-			// Actualizar totales
 			subtotalEl.textContent = `€${total.toFixed(2)}`;
 			totalEl.textContent = `€${total.toFixed(2)}`;
 
-			// Añadir eventos a los botones de eliminar
 			document.querySelectorAll('.btn-remove').forEach(btn => {
 				btn.addEventListener('click', (e) => {
 					const index = e.target.getAttribute('data-index');
 					cart.splice(index, 1);
 					localStorage.setItem('arethe_cart', JSON.stringify(cart));
-					renderCart(); // Volver a pintar
+					renderCart();
 				});
 			});
 		}
 
 		renderCart();
 
-		// 2. Lógica del Checkout
 		btnCheckout.addEventListener('click', () => {
 			checkoutModal.style.display = 'flex';
-			localStorage.removeItem('arethe_cart'); // Vaciamos la cesta
+			localStorage.removeItem('arethe_cart');
 			cart = [];
 			renderCart();
 		});
 
 		btnCloseModal.addEventListener('click', () => {
-			window.location.href = '/'; // Redirigir al inicio
+			window.location.href = '/';
 		});
 	});
 </script>
 
-<style>
+<style is:global>
+	/* Añadimos .cart-page delante de todo para que no afecte al resto de la web */
 	.cart-page {
 		background-color: var(--blanco-roto);
 		min-height: 100vh;
-		padding: 8rem 5%;
+		padding: 8rem 5% 6rem;
 	}
 
-	.cart-header { text-align: center; margin-bottom: 5rem; }
-	.cart-header h1 { font-size: 4rem; letter-spacing: -2px; }
-	.accent { font-style: italic; color: var(--turquesa); }
-	.cart-header p { opacity: 0.7; margin-top: 0.5rem; }
+	.cart-page .cart-header { text-align: center; margin-bottom: 5rem; }
+	.cart-page .cart-header h1 { font-size: 4rem; letter-spacing: -2px; }
+	.cart-page .accent { font-style: italic; color: var(--turquesa); }
+	.cart-page .cart-header p { opacity: 0.7; margin-top: 0.5rem; }
 
-	.cart-container {
+	.cart-page .cart-container {
 		display: grid;
-		grid-template-columns: 2fr 1fr;
-		gap: 4rem;
+		grid-template-columns: 1.5fr 1fr;
+		gap: 5rem;
 		max-width: 1100px;
 		margin: 0 auto;
+		align-items: start;
 	}
 
 	/* ESTADO VACÍO */
-	.empty-state {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		text-align: center;
-		padding: 4rem 0;
+	.cart-page .empty-state {
+		display: flex; flex-direction: column; align-items: center;
+		text-align: center; padding: 4rem 0;
 	}
-	.empty-blob {
+	.cart-page .empty-blob {
 		width: 150px; height: 150px;
 		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
 		background-color: var(--beige);
 		margin-bottom: 2rem;
 		animation: morph 8s ease-in-out infinite alternate;
 	}
-	.empty-state h2 { font-size: 2rem; margin-bottom: 1rem; }
-	.empty-state p { opacity: 0.6; margin-bottom: 2rem; }
+	.cart-page .empty-state h2 { font-size: 2rem; margin-bottom: 1rem; }
+	.cart-page .empty-state p { opacity: 0.6; margin-bottom: 2rem; }
 
-	/* LISTA DE ITEMS */
-	.cart-item {
-		display: grid;
-		grid-template-columns: 100px 1fr auto;
-		gap: 2rem;
-		align-items: center;
-		padding: 1.5rem 0;
-		border-bottom: 1px solid var(--beige);
+	/* LISTA DE ITEMS (TARJETAS) */
+	.cart-page .cart-items {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
 	}
 
-	.item-image {
-		width: 100px; height: 100px;
-		border-radius: 12px;
+	.cart-page .cart-item {
+		display: grid;
+		grid-template-columns: 120px 1fr auto;
+		gap: 2rem;
+		align-items: center;
+		background-color: white;
+		padding: 1.5rem;
+		border-radius: 24px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+		border: 1px solid rgba(0,0,0,0.02);
+		transition: transform 0.3s ease;
+	}
+
+	.cart-page .cart-item:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.06); }
+
+	.cart-page .item-image {
+		width: 120px; height: 120px;
+		border-radius: 16px;
 		overflow: hidden;
 		background-color: var(--beige);
 	}
-	.item-image img { width: 100%; height: 100%; object-fit: cover; }
-	.placeholder-mini { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; text-align: center; padding: 0.5rem; color: var(--marron); }
 
-	.item-details h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
-	.item-details p { font-size: 0.8rem; opacity: 0.6; margin-bottom: 0.8rem; }
-	.btn-remove { background: none; border: none; color: #d9534f; font-size: 0.8rem; text-decoration: underline; cursor: pointer; padding: 0; }
-	.item-price { font-weight: 600; font-size: 1.1rem; }
-
-	/* RESUMEN */
-	.cart-summary {
-		background-color: white;
-		padding: 2.5rem;
-		border-radius: 20px;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-		height: fit-content;
-	}
-	.cart-summary h2 { font-size: 1.5rem; margin-bottom: 2rem; font-family: var(--font-body); }
-	.summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.95rem; opacity: 0.7; }
-	.summary-row.total { font-size: 1.3rem; font-weight: 600; opacity: 1; margin-top: 1rem; }
-	hr { border: none; border-top: 1px solid var(--beige); margin: 1.5rem 0; }
+	.cart-page .item-image img { width: 100%; height: 100%; object-fit: cover; }
 	
-	.btn-checkout {
+	.cart-page .placeholder-mini { 
+		width: 100%; height: 100%; 
+		display: flex; align-items: center; justify-content: center; 
+		font-size: 0.65rem; font-weight: 600; text-align: center; 
+		padding: 1rem; color: var(--marron); opacity: 0.6;
+	}
+
+	.cart-page .item-details h3 { font-size: 1.3rem; font-family: var(--font-display); margin-bottom: 0.3rem; }
+	.cart-page .item-details p { font-size: 0.85rem; opacity: 0.5; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+	
+	.cart-page .btn-remove { 
+		background: none; border: none; 
+		color: var(--marron); opacity: 0.4; 
+		font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+		cursor: pointer; padding: 0; text-decoration: underline;
+		transition: opacity 0.2s;
+	}
+	.cart-page .btn-remove:hover { opacity: 1; color: #d9534f; }
+
+	.cart-page .item-price { font-weight: 600; font-size: 1.2rem; color: var(--marron); }
+
+	/* RESUMEN DE PAGO */
+	.cart-page .cart-summary {
+		background-color: white;
+		padding: 3rem;
+		border-radius: 24px;
+		box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+		position: sticky;
+		top: 100px;
+	}
+	.cart-page .cart-summary h2 { font-size: 1.5rem; margin-bottom: 2rem; font-family: var(--font-display); }
+	
+	.cart-page .summary-row { display: flex; justify-content: space-between; margin-bottom: 1.2rem; font-size: 0.95rem; opacity: 0.7; }
+	.cart-page .summary-row.total { font-size: 1.4rem; font-weight: 600; opacity: 1; margin-top: 1.5rem; font-family: var(--font-display); }
+	
+	.cart-page hr { border: none; border-top: 1px solid var(--beige); margin: 1.5rem 0; }
+	
+	.cart-page .btn-checkout {
 		width: 100%; background-color: var(--marron); color: white;
 		padding: 1.2rem; border: none; border-radius: 50px;
-		font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 2rem;
-		transition: all 0.3s;
+		font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+		font-weight: 600; cursor: pointer; margin-top: 2rem;
+		transition: all 0.3s ease;
+		box-shadow: 0 10px 20px rgba(64, 34, 17, 0.2);
 	}
-	.btn-checkout:hover { background-color: var(--turquesa); color: var(--marron); }
+	.cart-page .btn-checkout:hover { background-color: var(--turquesa); color: var(--marron); transform: translateY(-2px); }
 
 	/* MODAL */
-	.modal {
+	.cart-page .modal {
 		position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-		background-color: rgba(64, 34, 17, 0.8); backdrop-filter: blur(5px);
+		background-color: rgba(64, 34, 17, 0.7); backdrop-filter: blur(8px);
 		display: flex; justify-content: center; align-items: center; z-index: 1000;
 	}
-	.modal-content {
-		background-color: var(--blanco-roto); padding: 4rem; border-radius: 20px;
-		text-align: center; max-width: 500px; animation: popIn 0.4s ease;
+	.cart-page .modal-content {
+		background-color: var(--blanco-roto); padding: 4rem; border-radius: 30px;
+		text-align: center; max-width: 500px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 	}
-	.check-icon { width: 60px; height: 60px; background-color: var(--turquesa); color: var(--marron); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: bold; margin: 0 auto 1.5rem; }
-	.modal-content h2 { font-size: 2rem; margin-bottom: 1rem; }
-	.modal-content p { opacity: 0.7; margin-bottom: 2rem; line-height: 1.6; }
+	.cart-page .check-icon { width: 70px; height: 70px; background-color: var(--turquesa); color: var(--marron); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: bold; margin: 0 auto 1.5rem; }
+	.cart-page .modal-content h2 { font-size: 2.2rem; margin-bottom: 1rem; font-family: var(--font-display); }
+	.cart-page .modal-content p { opacity: 0.7; margin-bottom: 2rem; line-height: 1.6; }
 	
-	.btn { display: inline-block; background-color: var(--marron); color: var(--blanco-roto); padding: 1rem 2.5rem; border-radius: 50px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; }
-	.btn:hover { background-color: var(--turquesa); color: var(--marron); }
+	.cart-page .btn { display: inline-block; background-color: var(--marron); color: var(--blanco-roto); padding: 1rem 2.5rem; border-radius: 50px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; transition: all 0.3s; }
+	.cart-page .btn:hover { background-color: var(--turquesa); color: var(--marron); }
 
 	@keyframes morph { 0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; } 100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; } }
-	@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+	@keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+	/* MINIATURA DEL CONFIGURADOR */
+	.cart-page .mini-canvas {
+		position: relative;
+		width: 100%; height: 100%;
+		background-color: var(--beige);
+		overflow: hidden;
+		display: flex; justify-content: center; align-items: center;
+	}
 
+	.cart-page .mini-base-img {
+		width: 100%; height: 100%; object-fit: cover;
+	}
+
+	.cart-page .mini-base {
+		font-size: 0.6rem; text-align: center; padding: 0.5rem;
+		color: var(--marron); opacity: 0.5; font-weight: 600;
+	}
+
+	.cart-page .mini-patch {
+		position: absolute;
+		width: 80px; height: 80px; 
+		/* Quitamos el fondo amarillo para que parezca un parche real sobre la foto */
+		background-color: transparent; 
+		border: 2px dashed var(--marron);
+		border-radius: 50%;
+		display: flex; justify-content: center; align-items: center;
+		font-size: 0.5rem; font-weight: 600; color: var(--marron);
+		text-align: center; padding: 0.2rem;
+		transform-origin: center center;
+	}
 	@media (max-width: 900px) {
-		.cart-container { grid-template-columns: 1fr; }
+		.cart-page .cart-container { grid-template-columns: 1fr; gap: 3rem; }
+		.cart-page .cart-item { grid-template-columns: 80px 1fr; gap: 1rem; padding: 1rem; }
+		.cart-page .item-image { width: 80px; height: 80px; }
+		.cart-page .item-price { grid-column: 2; font-size: 1rem; }
+		.cart-page .cart-summary { position: static; padding: 2rem; }
 	}
 </style>

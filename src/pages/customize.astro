@@ -23,11 +23,18 @@ import Layout from '../layouts/Layout.astro';
 			<div class="control-group">
 				<span class="control-label">01. Select Patch</span>
 				<div class="patches-grid">
-					<!-- IDENTIFICADORES: V10 PATCHES -->
-					<button class="patch-option" data-src="[ Patch 01 ]"><span class="patch-text">Patch 01</span></button>
-					<button class="patch-option" data-src="[ Patch 02 ]"><span class="patch-text">Patch 02</span></button>
-					<button class="patch-option" data-src="[ Patch 03 ]"><span class="patch-text">Patch 03</span></button>
-					<button class="patch-option" data-src="[ Patch 04 ]"><span class="patch-text">Patch 04</span></button>
+					<button class="patch-option" data-src="[ Patch 01 ]" data-price="5">
+						<span class="patch-text">Patch 01</span>
+					</button>
+					<button class="patch-option" data-src="[ Patch 02 ]" data-price="5">
+						<span class="patch-text">Patch 02</span>
+					</button>
+					<button class="patch-option" data-src="[ Patch 03 ]" data-price="5">
+						<span class="patch-text">Patch 03</span>
+					</button>
+					<button class="patch-option" data-src="[ Patch 04 ]" data-price="5">
+						<span class="patch-text">Patch 04</span>
+					</button>
 				</div>
 			</div>
 
@@ -68,11 +75,14 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
+	import { products } from '../data/products.js';
+
 	document.addEventListener('DOMContentLoaded', () => {
 		const baseGarment = document.getElementById('base-garment');
 		const baseText = document.getElementById('base-text');
 		const patchOptions = document.querySelectorAll('.patch-option');
 		const garmentBtns = document.querySelectorAll('.garment-btn');
+		const garmentSelector = document.querySelector('.garment-selector'); // Para ocultarlo si venimos de un producto
 		const zoneBtns = document.querySelectorAll('.zone-btn');
 		const sizeSlider = document.getElementById('size-slider');
 		const previewPatch = document.getElementById('preview-patch');
@@ -81,12 +91,34 @@ import Layout from '../layouts/Layout.astro';
 
 		let currentPatchSrc = null;
 		let currentSize = 60;
+		let activeProduct = null; // Aquí guardaremos el producto si venimos de la colección
 
 		const zonePositions = {
 			left: { left: '35%', top: '35%' },
 			center: { left: '50%', top: '45%' },
 			right: { left: '65%', top: '35%' }
 		};
+
+		// LÓGICA PARA LEER LA URL
+		const urlParams = new URLSearchParams(window.location.search);
+		const productId = urlParams.get('id');
+
+		if (productId) {
+			activeProduct = products.find(p => p.id == productId);
+			if (activeProduct) {
+				// Ocultamos el selector de prenda porque el usuario ya ha elegido una
+				if (garmentSelector) garmentSelector.style.display = 'none';
+				
+				// Cargamos la prenda base según el tipo
+				if (activeProduct.type === 'bag') {
+					baseText.textContent = '[ V11 - Tote Bag Base ]';
+				} else if (activeProduct.type === 'pants') {
+					baseText.textContent = '[ V11 - Pants Base ]';
+				} else {
+					baseText.textContent = '[ V11 - T-Shirt Base ]';
+				}
+			}
+		}
 
 		function updateSize() {
 			previewPatch.style.transform = `translate(-50%, -50%) scale(${currentSize / 60})`;
@@ -102,8 +134,10 @@ import Layout from '../layouts/Layout.astro';
 			updateSize();
 		}
 
+		// Selector de prenda (solo funciona si NO venimos de un producto)
 		garmentBtns.forEach(btn => {
 			btn.addEventListener('click', () => {
+				if (activeProduct) return; // Bloqueado si venimos de la colección
 				garmentBtns.forEach(b => b.classList.remove('active'));
 				btn.classList.add('active');
 				baseText.textContent = btn.getAttribute('data-img');
@@ -136,6 +170,7 @@ import Layout from '../layouts/Layout.astro';
 			updateSize();
 		});
 
+		// Arrastre
 		let isDragging = false;
 		let offsetX = 0;
 		let offsetY = 0;
@@ -177,7 +212,8 @@ import Layout from '../layouts/Layout.astro';
 			patchOptions.forEach(b => b.classList.remove('selected'));
 			previewPatch.style.display = 'none';
 		});
-		// Guardar Customización en el Carrito
+
+		// GUARDAR EN EL CARRITO
 		const btnCustomSave = document.getElementById('btn-custom-save');
 		btnCustomSave.addEventListener('click', () => {
 			if (!currentPatchSrc) {
@@ -185,12 +221,43 @@ import Layout from '../layouts/Layout.astro';
 				return;
 			}
 
+			const canvasRect = previewPatch.parentElement.getBoundingClientRect();
+			const patchRect = previewPatch.getBoundingClientRect();
+			const centerX = (patchRect.left - canvasRect.left) + (patchRect.width / 2);
+			const centerY = (patchRect.top - canvasRect.top) + (patchRect.height / 2);
+			const leftPercent = (centerX / canvasRect.width) * 100;
+			const topPercent = (centerY / canvasRect.height) * 100;
+			
+			let finalTitle = "";
+			let finalPrice = "";
+			let baseImg = baseText.textContent;
+			let basePriceNum = 0;
+
+			// Si venimos de un producto real (ej. Product 4)
+			if (activeProduct) {
+				finalTitle = `${activeProduct.title} + ${currentPatchSrc}`;
+				basePriceNum = parseFloat(activeProduct.price.replace(/[^0-9.]/g, '')) || 0;
+				baseImg = activeProduct.images ? activeProduct.images[0] : activeProduct.img; // Guardamos la foto real
+			} else {
+				finalTitle = `Custom Garment + ${currentPatchSrc}`;
+				basePriceNum = 85; // Precio base por defecto
+			}
+
+			// Sumamos el coste del parche (5€)
+			const patchPrice = 5;
+			finalPrice = `€${(basePriceNum + patchPrice).toFixed(2)}`;
+
 			const item = {
-				id: 'custom-1',
-				title: 'Custom Garment',
-				price: '€85', // Precio base de prueba
-				image: baseText.textContent, // Coge el placeholder de la prenda
-				isCustom: true
+				id: 'custom-' + Date.now(),
+				title: finalTitle,
+				price: finalPrice,
+				isCustom: true,
+				baseGarment: baseImg, // Guardamos la imagen real aquí
+				baseTextLabel: baseText.textContent, // Guardamos el texto por si acaso
+				patchSrc: currentPatchSrc,
+				patchLeft: leftPercent,
+				patchTop: topPercent,
+				patchScale: currentSize / 60
 			};
 
 			let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
@@ -199,10 +266,12 @@ import Layout from '../layouts/Layout.astro';
 
 			btnCustomSave.textContent = 'Added to Cart!';
 			btnCustomSave.style.backgroundColor = 'var(--turquesa)';
+			btnCustomSave.style.color = 'var(--marron)';
 			
 			setTimeout(() => {
 				btnCustomSave.textContent = 'Add to Cart';
 				btnCustomSave.style.backgroundColor = 'var(--marron)';
+				btnCustomSave.style.color = 'white';
 			}, 2000);
 		});
 	});

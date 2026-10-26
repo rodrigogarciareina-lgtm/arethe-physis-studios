@@ -62,7 +62,33 @@ import Layout from '../layouts/Layout.astro';
 
 	</main>
 </Layout>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const form = document.querySelector('.contact-form');
+		
+		if (form) {
+			const btn = form.querySelector('.btn-submit');
 
+			form.addEventListener('submit', (e) => {
+				e.preventDefault(); // Evita que la página se recargue
+				
+				// Efecto visual de éxito
+				btn.textContent = 'Message Sent!';
+				btn.style.backgroundColor = 'var(--turquesa)';
+				btn.style.color = 'var(--marron)';
+				
+				form.reset(); // Limpia los campos
+
+				// Volver al estado original después de 3 segundos
+				setTimeout(() => {
+					btn.textContent = 'Send Message';
+					btn.style.backgroundColor = 'var(--marron)';
+					btn.style.color = 'var(--blanco-roto)';
+				}, 3000);
+			});
+		}
+	});
+</script>
 <style>
 	.contact-page {
 		background-color: var(--blanco-roto);
