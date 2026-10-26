@@ -35,11 +35,45 @@ const { product } = Astro.props;
 
 			<div class="actions">
 				<a href={`/customize?id=${product.id}`} class="btn-customize">Customize this piece</a>
-				<button class="btn-cart">Add to cart</button>
+				<button class="btn-cart" id="add-to-cart-btn" data-id={product.id} data-title={product.title} data-price={product.price} data-img={product.images ? product.images[0] : product.img}>Add to cart</button>
 			</div>
 		</div>
 
 	</main>
+	<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const btnCart = document.getElementById('add-to-cart-btn');
+				if(btnCart) {
+					btnCart.addEventListener('click', () => {
+						const item = {
+							id: btnCart.getAttribute('data-id'),
+							title: btnCart.getAttribute('data-title'),
+							price: btnCart.getAttribute('data-price'),
+							image: btnCart.getAttribute('data-img'),
+							isCustom: false
+						};
+
+						// Guardar en localStorage
+						let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
+						cart.push(item);
+						localStorage.setItem('arethe_cart', JSON.stringify(cart));
+
+						// Feedback visual
+						btnCart.textContent = 'Added to Cart!';
+						btnCart.style.backgroundColor = 'var(--turquesa)';
+						btnCart.style.color = 'var(--marron)';
+						btnCart.style.borderColor = 'var(--turquesa)';
+						
+						setTimeout(() => {
+							btnCart.textContent = 'Add to cart';
+							btnCart.style.backgroundColor = 'transparent';
+							btnCart.style.color = 'var(--marron)';
+							btnCart.style.borderColor = 'var(--marron)';
+						}, 2000);
+					});
+				}
+			});
+	</script>
 </Layout>
 
 <style>

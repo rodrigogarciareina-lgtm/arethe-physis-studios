@@ -1,0 +1,248 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Your Cart | Arethe Physis Studios">
+	<main class="cart-page">
+		
+		<header class="cart-header">
+			<h1>Your <span class="accent">Cart.</span></h1>
+			<p>Exclusive pieces waiting to be worn.</p>
+		</header>
+
+		<div class="cart-container">
+			<!-- Aquí JavaScript inyectará los productos -->
+			<div id="cart-items-container" class="cart-items">
+				<!-- Estado vacío (se oculta si hay productos) -->
+				<div id="empty-cart" class="empty-state">
+					<div class="empty-blob beige-blob"></div>
+					<h2>Your cart is empty</h2>
+					<p>Looks like you haven't added any upcycled magic yet.</p>
+					<a href="/collection" class="btn">Explore Collection</a>
+				</div>
+			</div>
+
+			<!-- Resumen de Pago (Solo visible si hay items) -->
+			<aside id="cart-summary" class="cart-summary" style="display: none;">
+				<h2>Order Summary</h2>
+				<div class="summary-row">
+					<span>Subtotal</span>
+					<span id="cart-subtotal">€0.00</span>
+				</div>
+				<div class="summary-row">
+					<span>Shipping</span>
+					<span>Calculated at checkout</span>
+				</div>
+				<hr />
+				<div class="summary-row total">
+					<span>Total</span>
+					<span id="cart-total">€0.00</span>
+				</div>
+				<button id="btn-checkout" class="btn-checkout">Proceed to Checkout</button>
+			</aside>
+		</div>
+
+		<!-- Modal de Checkout Simulado -->
+		<div id="checkout-modal" class="modal" style="display: none;">
+			<div class="modal-content">
+				<div class="check-icon">✓</div>
+				<h2>Order Confirmed!</h2>
+				<p>Thank you for choosing Arethe. This is a simulated checkout for our school project.</p>
+				<button id="btn-close-modal" class="btn">Back to Home</button>
+			</div>
+		</div>
+
+	</main>
+</Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const cartItemsContainer = document.getElementById('cart-items-container');
+		const emptyCart = document.getElementById('empty-cart');
+		const cartSummary = document.getElementById('cart-summary');
+		const subtotalEl = document.getElementById('cart-subtotal');
+		const totalEl = document.getElementById('cart-total');
+		const btnCheckout = document.getElementById('btn-checkout');
+		const checkoutModal = document.getElementById('checkout-modal');
+		const btnCloseModal = document.getElementById('btn-close-modal');
+
+		// 1. Leer el carrito del localStorage
+		let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
+
+		function renderCart() {
+			// Limpiamos el contenedor (dejando el empty-state)
+			const existingItems = cartItemsContainer.querySelectorAll('.cart-item');
+			existingItems.forEach(item => item.remove());
+
+			if (cart.length === 0) {
+				emptyCart.style.display = 'flex';
+				cartSummary.style.display = 'none';
+				return;
+			}
+
+			emptyCart.style.display = 'none';
+			cartSummary.style.display = 'block';
+
+			let total = 0;
+
+			cart.forEach((item, index) => {
+				// Extraer el número del precio (ej. "€85" -> 85)
+				const priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+				total += priceNum;
+
+				const itemEl = document.createElement('div');
+				itemEl.classList.add('cart-item');
+				
+				// Si es una customización, mostramos un borde distinto o info extra
+				itemEl.innerHTML = `
+					<div class="item-image">
+						${item.image.startsWith('[') ? `<div class="placeholder-mini">${item.image}</div>` : `<img src="${item.image}" />`}
+					</div>
+					<div class="item-details">
+						<h3>${item.title}</h3>
+						<p>${item.isCustom ? 'Customized Piece' : 'Upcycled Original'}</p>
+						<button class="btn-remove" data-index="${index}">Remove</button>
+					</div>
+					<div class="item-price">${item.price}</div>
+				`;
+
+				cartItemsContainer.appendChild(itemEl);
+			});
+
+			// Actualizar totales
+			subtotalEl.textContent = `€${total.toFixed(2)}`;
+			totalEl.textContent = `€${total.toFixed(2)}`;
+
+			// Añadir eventos a los botones de eliminar
+			document.querySelectorAll('.btn-remove').forEach(btn => {
+				btn.addEventListener('click', (e) => {
+					const index = e.target.getAttribute('data-index');
+					cart.splice(index, 1);
+					localStorage.setItem('arethe_cart', JSON.stringify(cart));
+					renderCart(); // Volver a pintar
+				});
+			});
+		}
+
+		renderCart();
+
+		// 2. Lógica del Checkout
+		btnCheckout.addEventListener('click', () => {
+			checkoutModal.style.display = 'flex';
+			localStorage.removeItem('arethe_cart'); // Vaciamos la cesta
+			cart = [];
+			renderCart();
+		});
+
+		btnCloseModal.addEventListener('click', () => {
+			window.location.href = '/'; // Redirigir al inicio
+		});
+	});
+</script>
+
+<style>
+	.cart-page {
+		background-color: var(--blanco-roto);
+		min-height: 100vh;
+		padding: 8rem 5%;
+	}
+
+	.cart-header { text-align: center; margin-bottom: 5rem; }
+	.cart-header h1 { font-size: 4rem; letter-spacing: -2px; }
+	.accent { font-style: italic; color: var(--turquesa); }
+	.cart-header p { opacity: 0.7; margin-top: 0.5rem; }
+
+	.cart-container {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: 4rem;
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	/* ESTADO VACÍO */
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding: 4rem 0;
+	}
+	.empty-blob {
+		width: 150px; height: 150px;
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+		background-color: var(--beige);
+		margin-bottom: 2rem;
+		animation: morph 8s ease-in-out infinite alternate;
+	}
+	.empty-state h2 { font-size: 2rem; margin-bottom: 1rem; }
+	.empty-state p { opacity: 0.6; margin-bottom: 2rem; }
+
+	/* LISTA DE ITEMS */
+	.cart-item {
+		display: grid;
+		grid-template-columns: 100px 1fr auto;
+		gap: 2rem;
+		align-items: center;
+		padding: 1.5rem 0;
+		border-bottom: 1px solid var(--beige);
+	}
+
+	.item-image {
+		width: 100px; height: 100px;
+		border-radius: 12px;
+		overflow: hidden;
+		background-color: var(--beige);
+	}
+	.item-image img { width: 100%; height: 100%; object-fit: cover; }
+	.placeholder-mini { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; text-align: center; padding: 0.5rem; color: var(--marron); }
+
+	.item-details h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
+	.item-details p { font-size: 0.8rem; opacity: 0.6; margin-bottom: 0.8rem; }
+	.btn-remove { background: none; border: none; color: #d9534f; font-size: 0.8rem; text-decoration: underline; cursor: pointer; padding: 0; }
+	.item-price { font-weight: 600; font-size: 1.1rem; }
+
+	/* RESUMEN */
+	.cart-summary {
+		background-color: white;
+		padding: 2.5rem;
+		border-radius: 20px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+		height: fit-content;
+	}
+	.cart-summary h2 { font-size: 1.5rem; margin-bottom: 2rem; font-family: var(--font-body); }
+	.summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.95rem; opacity: 0.7; }
+	.summary-row.total { font-size: 1.3rem; font-weight: 600; opacity: 1; margin-top: 1rem; }
+	hr { border: none; border-top: 1px solid var(--beige); margin: 1.5rem 0; }
+	
+	.btn-checkout {
+		width: 100%; background-color: var(--marron); color: white;
+		padding: 1.2rem; border: none; border-radius: 50px;
+		font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 2rem;
+		transition: all 0.3s;
+	}
+	.btn-checkout:hover { background-color: var(--turquesa); color: var(--marron); }
+
+	/* MODAL */
+	.modal {
+		position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+		background-color: rgba(64, 34, 17, 0.8); backdrop-filter: blur(5px);
+		display: flex; justify-content: center; align-items: center; z-index: 1000;
+	}
+	.modal-content {
+		background-color: var(--blanco-roto); padding: 4rem; border-radius: 20px;
+		text-align: center; max-width: 500px; animation: popIn 0.4s ease;
+	}
+	.check-icon { width: 60px; height: 60px; background-color: var(--turquesa); color: var(--marron); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: bold; margin: 0 auto 1.5rem; }
+	.modal-content h2 { font-size: 2rem; margin-bottom: 1rem; }
+	.modal-content p { opacity: 0.7; margin-bottom: 2rem; line-height: 1.6; }
+	
+	.btn { display: inline-block; background-color: var(--marron); color: var(--blanco-roto); padding: 1rem 2.5rem; border-radius: 50px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; }
+	.btn:hover { background-color: var(--turquesa); color: var(--marron); }
+
+	@keyframes morph { 0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; } 100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; } }
+	@keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+	@media (max-width: 900px) {
+		.cart-container { grid-template-columns: 1fr; }
+	}
+</style>

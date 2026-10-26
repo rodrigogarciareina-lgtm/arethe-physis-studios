@@ -47,7 +47,7 @@ import Layout from '../layouts/Layout.astro';
 
 			<div class="actions">
 				<button id="btn-clear" class="btn-clear">Clear</button>
-				<button class="btn-save">Add to Cart</button>
+				<button id="btn-custom-save" class="btn-save">Add to Cart</button>
 			</div>
 		</aside>
 
@@ -176,6 +176,34 @@ import Layout from '../layouts/Layout.astro';
 			currentPatchSrc = null;
 			patchOptions.forEach(b => b.classList.remove('selected'));
 			previewPatch.style.display = 'none';
+		});
+		// Guardar Customización en el Carrito
+		const btnCustomSave = document.getElementById('btn-custom-save');
+		btnCustomSave.addEventListener('click', () => {
+			if (!currentPatchSrc) {
+				alert("Please select a patch first!");
+				return;
+			}
+
+			const item = {
+				id: 'custom-1',
+				title: 'Custom Garment',
+				price: '€85', // Precio base de prueba
+				image: baseText.textContent, // Coge el placeholder de la prenda
+				isCustom: true
+			};
+
+			let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
+			cart.push(item);
+			localStorage.setItem('arethe_cart', JSON.stringify(cart));
+
+			btnCustomSave.textContent = 'Added to Cart!';
+			btnCustomSave.style.backgroundColor = 'var(--turquesa)';
+			
+			setTimeout(() => {
+				btnCustomSave.textContent = 'Add to Cart';
+				btnCustomSave.style.backgroundColor = 'var(--marron)';
+			}, 2000);
 		});
 	});
 </script>
