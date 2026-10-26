@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { products } from '../data/products.js';
 ---
-<Layout title="Collection | Arethé Physis Studios">
+<Layout title="Collection | Arethe Physis Studios" theme="yellow-theme">
 	<main class="collection-page">
 		
 		<header class="page-header">
@@ -18,13 +18,22 @@ import { products } from '../data/products.js';
 						{product.images ? (
 							product.images.map((img, index) => (
 								<div class={`bubble animated anim-${index}`}>
-									<img src={img} alt={product.title} />
+									<!-- Si el texto empieza con "[", es un placeholder -->
+									{img.startsWith('[') ? (
+										<div class="placeholder-text">{img}</div>
+									) : (
+										<img src={img} alt={product.title} />
+									)}
 									<span class="tag">{product.tag}</span>
 								</div>
 							))
 						) : (
 							<div class="bubble static">
-								<img src={product.img} alt={product.title} />
+								{product.img.startsWith('[') ? (
+									<div class="placeholder-text">{product.img}</div>
+								) : (
+									<img src={product.img} alt={product.title} />
+								)}
 								<span class="tag">{product.tag}</span>
 							</div>
 						)}
@@ -42,38 +51,16 @@ import { products } from '../data/products.js';
 </Layout>
 
 <style>
-	/* FONDO AMARILLO PARA TODA LA PÁGINA */
 	.collection-page {
 		padding: 6rem 5%;
-		background-color: var(--amarillo); /* El amarillo de la marca */
+		background-color: var(--amarillo);
 		min-height: 100vh;
 	}
 
-	.page-header {
-		text-align: center;
-		margin-bottom: 6rem;
-	}
-
-	.page-header h1 {
-		font-size: 4rem;
-		margin-bottom: 1rem;
-		letter-spacing: -2px;
-		color: var(--marron);
-	}
-
-	.accent {
-		font-style: italic;
-		color: var(--blanco-roto); /* Blanco para que resalte sobre el amarillo */
-		text-shadow: 1px 1px 0px var(--marron); /* Un toque de sombra para el contraste */
-	}
-
-	.page-header p {
-		font-size: 1rem;
-		color: var(--marron);
-		opacity: 0.8;
-		max-width: 500px;
-		margin: 0 auto;
-	}
+	.page-header { text-align: center; margin-bottom: 6rem; }
+	.page-header h1 { font-size: 4rem; margin-bottom: 1rem; letter-spacing: -2px; color: var(--marron); }
+	.accent { font-style: italic; color: var(--blanco-roto); text-shadow: 1px 1px 0px var(--marron); }
+	.page-header p { font-size: 1rem; color: var(--marron); opacity: 0.8; max-width: 500px; margin: 0 auto; }
 
 	.product-grid {
 		display: grid;
@@ -82,138 +69,60 @@ import { products } from '../data/products.js';
 		justify-items: center;
 	}
 
-	.product-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-		max-width: 260px;
-	}
+	.product-card { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 260px; }
+	.card-visual { position: relative; width: 100%; aspect-ratio: 1 / 1; margin-bottom: 1.5rem; }
 
-	.card-visual {
-		position: relative;
-		width: 100%;
-		aspect-ratio: 1 / 1;
-		margin-bottom: 1.5rem;
-	}
-
-	/* BURBUJA BASE */
 	.bubble {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+		position: absolute; top: 0; left: 0; width: 100%; height: 100%;
 		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-		overflow: hidden;
-		background-color: var(--beige);
-		/* Transiciones para el hover */
+		overflow: hidden; background-color: var(--beige);
 		transition: border-radius 0.4s ease, box-shadow 0.4s ease;
 	}
 
-	.bubble img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		pointer-events: none;
+	.bubble img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+	/* ESTILO PARA EL PLACEHOLDER DE TEXTO */
+	.placeholder-text {
+		width: 100%; height: 100%;
+		display: flex; justify-content: center; align-items: center;
+		font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
+		color: var(--marron); text-align: center; padding: 1rem;
 	}
 
-	/* ESTÁTICAS */
-	.bubble.static {
-		animation: breathe 6s ease-in-out infinite alternate;
-	}
+	.bubble.static { animation: breathe 6s ease-in-out infinite alternate; }
+	.bubble.animated { animation-duration: 10s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+	.bubble.animated.anim-0 { animation-name: syncCycleA, breathe; }
+	.bubble.animated.anim-1 { animation-name: syncCycleB, breathe; }
 
-	/* ANIMADAS (Cruce exagerado y respiración) */
-	/* Asignamos DOS animaciones separadas por coma: el ciclo y la respiración */
-		.bubble.animated {
-		animation-duration: 10s; /* Ahora tarda 5s en mostrarse cada foto */
-		animation-iteration-count: infinite;
-		animation-timing-function: ease-in-out;
-	}
-
-	/* Imagen 1 */
-	.bubble.animated.anim-0 {
-		animation-name: syncCycleA, breathe;
-	}
-
-	/* Imagen 2 */
-	.bubble.animated.anim-1 {
-		animation-name: syncCycleB, breathe;
-	}
-
-	/* EFECTO HOVER: Pausa y círculo */
-	.product-card:hover .bubble.animated {
-		animation-play-state: paused;
-	}
-
-	.product-card:hover .bubble {
-		border-radius: 50%;
-		box-shadow: 0 15px 30px rgba(64, 34, 17, 0.2); /* Sombra más fuerte para el amarillo */
-	}
+	.product-card:hover .bubble.animated { animation-play-state: paused; }
+	.product-card:hover .bubble { border-radius: 50%; box-shadow: 0 15px 30px rgba(64, 34, 17, 0.2); }
 
 	.tag {
-		position: absolute;
-		top: 15%;
-		left: 15%;
-		background-color: var(--marron); /* Etiqueta marrón para contrastar con amarillo */
-		color: var(--blanco-roto);
-		padding: 0.3rem 0.8rem;
-		border-radius: 50px;
-		font-size: 0.65rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 1px;
-		z-index: 10;
+		position: absolute; top: 15%; left: 15%;
+		background-color: var(--marron); color: var(--blanco-roto);
+		padding: 0.3rem 0.8rem; border-radius: 50px;
+		font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; z-index: 10;
 	}
 
-	/* ANIMACIONES */
 	@keyframes breathe {
 		0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
 		100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
 	}
-
-	/* Imagen A: Visible del 0 al 45%. Desaparece de golpe al 50%. Vuelve al 100%. */
 	@keyframes syncCycleA {
 		0%, 45% { opacity: 1; transform: scale(1); }
-		50%, 95% { opacity: 0; transform: scale(0.2); } /* Se hace diminuta al irse */
+		50%, 95% { opacity: 0; transform: scale(0.2); }
 		100% { opacity: 1; transform: scale(1); }
 	}
-
-	/* Imagen B: Oculta del 0 al 45%. Aparece de golpe al 50%. Crece. Se va al 100%. */
 	@keyframes syncCycleB {
-		0%, 45% { opacity: 0; transform: scale(0.2); } /* Espera diminuta */
-		50%, 95% { opacity: 1; transform: scale(1); } /* Crece exageradamente al entrar */
+		0%, 45% { opacity: 0; transform: scale(0.2); }
+		50%, 95% { opacity: 1; transform: scale(1); }
 		100% { opacity: 0; transform: scale(0.2); }
 	}
 
-	/* INFO */
-	.product-info {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		text-align: center;
-		gap: 0.2rem;
-	}
-
-	.product-info h2 {
-		font-size: 0.95rem;
-		font-family: var(--font-body);
-		font-weight: 500;
-		color: var(--marron); /* Texto marrón sobre fondo amarillo */
-		transition: color 0.3s ease;
-		line-height: 1.3;
-	}
-
-	.product-card:hover .product-info h2 { 
-		color: var(--blanco-roto); 
-	}
-
-	.price {
-		font-weight: 600;
-		font-size: 0.85rem;
-		color: var(--marron);
-		opacity: 0.7;
-	}
+	.product-info { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.2rem; }
+	.product-info h2 { font-size: 0.95rem; font-family: var(--font-body); font-weight: 500; color: var(--marron); transition: color 0.3s ease; line-height: 1.3; }
+	.product-card:hover .product-info h2 { color: var(--blanco-roto); }
+	.price { font-weight: 600; font-size: 0.85rem; color: var(--marron); opacity: 0.7; }
 
 	@media (max-width: 768px) {
 		.collection-page { padding: 4rem 1.5rem; }

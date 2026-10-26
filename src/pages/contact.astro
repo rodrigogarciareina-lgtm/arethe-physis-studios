@@ -1,0 +1,219 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Contact & FAQ | Arethe Physis Studios">
+	<main class="contact-page">
+		
+		<!-- Cabecera -->
+		<header class="contact-header">
+			<h1>Let's <span class="accent">talk.</span></h1>
+			<p>Have a question about a piece, a custom order, or just want to say hi? Drop us a line.</p>
+		</header>
+
+		<!-- Layout de dos columnas: Formulario a la izq, FAQ a la der -->
+		<div class="contact-grid">
+			
+			<!-- Formulario -->
+			<section class="form-section">
+				<h2>Send a message</h2>
+				<form action="#" method="POST" class="contact-form">
+					<div class="input-group">
+						<label for="name">Name</label>
+						<input type="text" id="name" name="name" required placeholder="Your name" />
+					</div>
+					<div class="input-group">
+						<label for="email">Email</label>
+						<input type="email" id="email" name="email" required placeholder="you@email.com" />
+					</div>
+					<div class="input-group">
+						<label for="message">Message</label>
+						<textarea id="message" name="message" rows="5" required placeholder="I'd love to customize a denim jacket..."></textarea>
+					</div>
+					<button type="submit" class="btn-submit">Send Message</button>
+				</form>
+			</section>
+
+			<!-- FAQ (Acordeón con HTML nativo) -->
+			<section class="faq-section">
+				<h2>Frequently Asked Questions</h2>
+				
+				<details class="faq-item">
+					<summary>What exactly is "upcycling"?</summary>
+					<p>Upcycling is the process of transforming by-products, waste materials, or unwanted products into new materials or products of better quality or environmental value.</p>
+				</details>
+
+				<details class="faq-item">
+					<summary>Can I customize any item from the collection?</summary>
+					<p>Yes! Every piece is one-of-one. You can use our visual customizer to add patches and choose their placement before adding it to your cart.</p>
+				</details>
+
+				<details class="faq-item">
+					<summary>How long does shipping take?</summary>
+					<p>Since every piece is made to order and customized, please allow 5-7 business days for us to prepare and ship your garment.</p>
+				</details>
+
+				<details class="faq-item">
+					<summary>Do you ship internationally?</summary>
+					<p>Currently, we only ship within Spain. We are looking to expand to the rest of Europe in the near future.</p>
+				</details>
+			</section>
+
+		</div>
+
+	</main>
+</Layout>
+
+<style>
+	.contact-page {
+		background-color: var(--blanco-roto);
+		min-height: 100vh;
+		padding: 8rem 5%;
+	}
+
+	.contact-header {
+		text-align: center;
+		margin-bottom: 6rem;
+	}
+
+	.contact-header h1 {
+		font-size: 5rem;
+		letter-spacing: -2px;
+		margin-bottom: 1rem;
+	}
+
+	.accent {
+		font-style: italic;
+		color: var(--turquesa);
+	}
+
+	.contact-header p {
+		font-size: 1.1rem;
+		opacity: 0.7;
+		max-width: 500px;
+		margin: 0 auto;
+	}
+
+	/* GRID */
+	.contact-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 6rem;
+		max-width: 1000px;
+		margin: 0 auto;
+	}
+
+	/* FORMULARIO */
+	.form-section h2, .faq-section h2 {
+		font-size: 2rem;
+		margin-bottom: 2rem;
+		font-family: var(--font-body);
+		font-weight: 600;
+	}
+
+	.contact-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.input-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.input-group label {
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-weight: 600;
+		opacity: 0.6;
+	}
+
+	.input-group input, .input-group textarea {
+		background-color: transparent;
+		border: none;
+		border-bottom: 1px solid var(--beige);
+		padding: 0.8rem 0;
+		font-family: var(--font-body);
+		font-size: 1rem;
+		color: var(--marron);
+		transition: border-color 0.3s;
+	}
+
+	.input-group input:focus, .input-group textarea:focus {
+		outline: none;
+		border-bottom-color: var(--turquesa);
+	}
+
+	.btn-submit {
+		align-self: flex-start;
+		background-color: var(--marron);
+		color: var(--blanco-roto);
+		padding: 1rem 2.5rem;
+		border: none;
+		border-radius: 50px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.3s;
+		margin-top: 1rem;
+	}
+
+	.btn-submit:hover {
+		background-color: var(--turquesa);
+		color: var(--marron);
+		transform: translateY(-2px);
+	}
+
+	/* FAQ (Acordeón con CSS minimalista) */
+	.faq-item {
+		border-bottom: 1px solid var(--beige);
+		padding: 1.5rem 0;
+	}
+
+	.faq-item summary {
+		font-size: 1.1rem;
+		font-weight: 500;
+		cursor: pointer;
+		list-style: none; /* Quita la flecha por defecto */
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: var(--marron);
+	}
+
+	.faq-item summary::-webkit-details-marker {
+		display: none; /* Quita la flecha en Safari */
+	}
+
+	/* Icono de + / - */
+	.faq-item summary::after {
+		content: '+';
+		font-size: 1.5rem;
+		color: var(--turquesa);
+		transition: transform 0.3s ease;
+	}
+
+	.faq-item[open] summary::after {
+		content: '−'; /* Cambia a menos cuando está abierto */
+	}
+
+	.faq-item p {
+		margin-top: 1rem;
+		font-size: 0.95rem;
+		line-height: 1.6;
+		opacity: 0.7;
+		animation: fadeIn 0.3s ease;
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(-5px); }
+		to { opacity: 0.7; transform: translateY(0); }
+	}
+
+	@media (max-width: 900px) {
+		.contact-grid { grid-template-columns: 1fr; gap: 4rem; }
+		.contact-header h1 { font-size: 3.5rem; }
+	}
+</style>
