@@ -7,8 +7,12 @@ import Layout from '../layouts/Layout.astro';
 	<section class="hero">
 		<div class="hero-content">
 			<div class="tagline-pill">Est. 2024 — Upcycling Studio</div>
+			
 			<h1>From waste<br/>to <span class="accent">Virtue.</span></h1>
-			<p>Exclusive streetwear crafted from rescued textiles.<br/>Made one at a time. By Nature.</p>
+			<p class="by-nature">By Nature.</p>
+			
+			<p class="hero-desc">Exclusive streetwear crafted from rescued textiles.<br/>Made one at a time.</p>
+			
 			<a href="/collection" class="btn">Explore collection</a>
 		</div>
 		
@@ -72,19 +76,69 @@ import Layout from '../layouts/Layout.astro';
 		color: var(--marron);
 		padding: 0.4rem 1rem;
 		border-radius: 50px;
+		font-family: var(--font-body); /* Fuerza la fuente Inter */
 		font-size: 0.75rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 1px;
+		letter-spacing: 1.5px; /* Letras un poco separadas para que respire */
 		margin-bottom: 2rem;
 	}
 	.hero h1 {
 		font-size: 6rem;
-		margin-bottom: 1.5rem;
+		margin-bottom: 0.2rem; /* Reducimos el margen porque ahora "By Nature" va debajo */
 		line-height: 0.9;
 		letter-spacing: -3px;
 	}
-	.accent { font-style: italic; color: var(--turquesa); }
+
+	/* PROBANDO LA FUENTE AMARILLO EN VIRTUE */
+	.accent { 
+		font-family: 'Amarillo', cursive; 
+		font-style: normal; /* La fuente Amarillo ya es caligráfica */
+		color: var(--turquesa);
+		font-size: 0.6em; /* Un poco más grande para que destaque */
+		letter-spacing: 1.5px;
+	}
+	
+	/* EL NUEVO TEXTO "BY NATURE" */
+	.hero .by-nature {
+		font-family: var(--font-display);
+		font-size: 2.0rem; /* Prueba con 3.5 o 4 para ver cuál te gusta más */
+		font-style: italic;
+		color: var(--marron);
+		margin-bottom: 2.0rem;
+		margin-top: 0.8rem; /* Ajusta el espacio entre el h1 y este texto */
+		letter-spacing: -1px;
+		display: block;
+		line-height: 1;
+	}
+
+	.hero-desc {
+		font-size: 1.1rem;
+		margin-bottom: 2.5rem;
+		max-width: 350px;
+		color: var(--marron);
+		opacity: 0.8;
+	}
+	
+	/* Arreglamos el sello para que no se deforme */
+	.floating-badge {
+		position: absolute;
+		bottom: 10%;
+		right: 5%;
+		background-color: var(--blanco-roto);
+		color: var(--marron);
+		padding: 1rem 2.5rem;
+		border-radius: 50px;
+		font-family: var(--font-body); /* Le devolvemos Inter */
+		font-weight: 700;
+		font-size: 1rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+		transform: rotate(-5deg);
+		z-index: 10;
+	}
+	
 	.hero p {
 		font-size: 1.1rem;
 		margin-bottom: 2.5rem;
@@ -145,21 +199,7 @@ import Layout from '../layouts/Layout.astro';
 		text-align: center;
 		padding: 2rem;
 	}
-	.floating-badge {
-		position: absolute;
-		bottom: 10%;
-		right: 5%;
-		background-color: var(--blanco-roto);
-		color: var(--marron);
-		padding: 1rem 2rem;
-		border-radius: 50px;
-		font-family: var(--font-display);
-		font-weight: 600;
-		font-size: 1.2rem;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-		transform: rotate(-5deg);
-		z-index: 10;
-	}
+	
 	@keyframes morph {
 		0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
 		100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }

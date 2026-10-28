@@ -33,9 +33,16 @@ const { title = "Arethe Physis Studios", theme = "light" } = Astro.props;
 		--beige: #D9CECA;
 		--blanco-roto: #F9F8F6;
 		
-		/* CAMBIO AQUÍ: Usamos Amarillo para los títulos grandes */
-		--font-display: 'Amarillo', 'Playfair Display', serif; 
+		/* Volvemos a Playfair para los títulos principales */
+		--font-display: 'Playfair Display', serif; 
 		--font-body: 'Inter', sans-serif;
+	}
+
+	/* NUEVA CLASE: Úsala solo cuando quieras la fuente Amarillo */
+	.font-amarillo {
+		font-family: 'Amarillo', cursive;
+		font-weight: normal;
+		letter-spacing: 1px;
 	}
 
 	* { margin: 0; padding: 0; box-sizing: border-box; }
