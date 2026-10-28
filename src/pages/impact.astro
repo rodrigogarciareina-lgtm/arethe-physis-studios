@@ -3,244 +3,427 @@ import Layout from '../layouts/Layout.astro';
 ---
 <Layout title="Our Impact | Arethe Physis Studios">
 	<main class="impact-page">
-		
-		<header class="impact-header">
-			<span class="tagline">Data-driven Sustainability</span>
-			<h1>The <span class="accent">Impact</span> Report</h1>
-			<p>We don't just talk about change. Here is the data from our market research proving that the future of fashion is circular.</p>
-		</header>
+		<div class="content-wrapper">
+			<header class="impact-header fade-in">
+				<span class="tagline">Data-driven Sustainability</span>
+				<h1>The <span class="accent">Impact</span> Report</h1>
+				<p>We don't just talk about change. Here is the data from our market research proving that the future of fashion is circular.</p>
+			</header>
 
-		<!-- BLOQUE 1: EL PROBLEMA (Sostenibilidad) -->
-		<section class="impact-section">
-			<div class="section-header">
-				<span class="section-num">01</span>
-				<h2>The Problem: Fast Fashion</h2>
-				<p>We asked our audience how they feel about the current state of the industry.</p>
-			</div>
-			
-			<div class="data-grid">
-				<!-- Gráfico 1: Concern -->
-				<div class="chart-card beige-bg">
-					<h3>Environmental Concern</h3>
-					<p class="chart-desc">On a scale of 1 to 5, how concerned are you about fast fashion's impact?</p>
-					<div class="placeholder-chart">
-						[ Gráfico 1: Donut Chart — Nivel de Preocupación ]
-					</div>
-				</div>
-
-				<!-- Gráfico 2: Upcycling Knowledge -->
-				<div class="chart-card turquoise-bg">
-					<h3>Do you know what Upcycling is?</h3>
-					<p class="chart-desc">We tested the awareness of circular fashion concepts.</p>
-					<div class="placeholder-chart">
-						[ Gráfico 2: Pie Chart — Conocimiento de Upcycling ]
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- BLOQUE 2: EL PERFIL (Quién compra) -->
-		<section class="impact-section">
-			<div class="section-header">
-				<span class="section-num">02</span>
-				<h2>Who is our customer?</h2>
-				<p>Understanding the demographics and style preferences of our target market.</p>
-			</div>
-			
-			<div class="data-grid three-cols">
-				<!-- Gráfico 3: Age -->
-				<div class="chart-card">
-					<h3>Age Demographics</h3>
-					<div class="placeholder-chart small-chart">[ Gráfico 3: Bar Chart — Edades ]</div>
+			<!-- BLOQUE 1 -->
+			<section class="impact-section">
+				<div class="section-header fade-in">
+					<span class="section-num">01</span>
+					<h2>The Problem: Fast Fashion</h2>
+					<p>We asked our audience how they feel about the current state of the industry.</p>
 				</div>
 				
-				<!-- Gráfico 4: Style -->
-				<div class="chart-card">
-					<h3>Style Preferences</h3>
-					<div class="placeholder-chart small-chart">[ Gráfico 4: Bar Chart — Estilos (Streetwear, Vintage, etc.) ]</div>
-				</div>
+				<div class="data-grid">
+					<div class="chart-card fade-in">
+						<h3>Environmental Concern</h3>
+						<p class="chart-desc">On a scale of 1 to 5, how concerned are you about fast fashion's impact?</p>
+						<div class="canvas-container"><canvas id="chartConcern"></canvas></div>
+					</div>
 
-				<!-- Gráfico 5: Status -->
-				<div class="chart-card">
-					<h3>Current Status</h3>
-					<div class="placeholder-chart small-chart">[ Gráfico 5: Pie Chart — Estudiante/Trabajador ]</div>
+					<div class="chart-card fade-in">
+						<h3>Do you know what Upcycling is?</h3>
+						<p class="chart-desc">We tested the awareness of circular fashion concepts.</p>
+						<div class="canvas-container"><canvas id="chartUpcycling"></canvas></div>
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<!-- BLOQUE 3: LOS HÁBITOS (Cómo compran) -->
-		<section class="impact-section">
-			<div class="section-header">
-				<span class="section-num">03</span>
-				<h2>Shopping Habits</h2>
-				<p>How often do they buy, where do they go, and what drives their decisions?</p>
-			</div>
-			
-			<div class="data-grid">
-				<!-- Gráfico 6: Where they buy -->
-				<div class="chart-card yellow-bg">
-					<h3>Where do you usually buy clothes?</h3>
-					<div class="placeholder-chart">[ Gráfico 6: Horizontal Bar Chart — Fast Fashion vs Thrift ]</div>
+			<!-- BLOQUE 2 -->
+			<section class="impact-section">
+				<div class="section-header fade-in">
+					<span class="section-num">02</span>
+					<h2>Who is our customer?</h2>
+					<p>Understanding the demographics and style preferences of our target market.</p>
 				</div>
+				
+				<div class="data-grid three-cols">
+					<div class="chart-card fade-in">
+						<h3>Age</h3>
+						<div class="canvas-container small-canvas"><canvas id="chartAge"></canvas></div>
+					</div>
+					
+					<div class="chart-card fade-in">
+						<h3>Style</h3>
+						<div class="canvas-container small-canvas"><canvas id="chartStyle"></canvas></div>
+					</div>
 
-				<!-- Gráfico 7: Most important factor -->
-				<div class="chart-card">
-					<h3>Most important factor</h3>
-					<div class="placeholder-chart">[ Gráfico 7: Radar Chart — Precio vs Sostenibilidad vs Diseño ]</div>
+					<div class="chart-card fade-in">
+						<h3>Status</h3>
+						<div class="canvas-container small-canvas"><canvas id="chartStatus"></canvas></div>
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
 
-		<!-- BLOQUE 4: EL FIT CON ARETHE (Nuestra oportunidad) -->
-		<section class="impact-section">
-			<div class="section-header">
-				<span class="section-num">04</span>
-				<h2>The Arethe Opportunity</h2>
-				<p>Validating our business model: customization and willingness to pay.</p>
-			</div>
-			
-			<div class="data-grid">
-				<!-- Gráfico 8: Customization -->
-				<div class="chart-card turquoise-bg">
-					<h3>What would you customize?</h3>
-					<p class="chart-desc">Proving the demand for our visual customizer.</p>
-					<div class="placeholder-chart">[ Gráfico 8: Bubble Chart — Prendas a customizar ]</div>
+			<!-- BLOQUE 3 -->
+			<section class="impact-section">
+				<div class="section-header fade-in">
+					<span class="section-num">03</span>
+					<h2>Shopping Habits</h2>
+					<p>How often do they buy, where do they go, and what drives their decisions?</p>
 				</div>
+				
+				<div class="data-grid">
+					<div class="chart-card fade-in">
+						<h3>Where do you usually buy clothes?</h3>
+						<div class="canvas-container"><canvas id="chartWhere"></canvas></div>
+					</div>
 
-				<!-- Gráfico 9: Willingness to pay -->
-				<div class="chart-card beige-bg">
-					<h3>Willingness to Pay</h3>
-					<p class="chart-desc">How much would you pay for a unique, upcycled piece?</p>
-					<div class="placeholder-chart">[ Gráfico 9: Bar Chart — Rangos de Precio ]</div>
+					<div class="chart-card fade-in">
+						<h3>Most important factor</h3>
+						<div class="canvas-container"><canvas id="chartFactor"></canvas></div>
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
 
+			<!-- BLOQUE 4 -->
+			<section class="impact-section">
+				<div class="section-header fade-in">
+					<span class="section-num">04</span>
+					<h2>The Arethe Opportunity</h2>
+					<p>Validating our business model: customization and willingness to pay.</p>
+				</div>
+				
+				<div class="data-grid">
+					<div class="chart-card fade-in">
+						<h3>What would you customize?</h3>
+						<div class="canvas-container"><canvas id="chartCustomize"></canvas></div>
+					</div>
+
+					<div class="chart-card fade-in">
+						<h3>Willingness to Pay</h3>
+						<div class="canvas-container"><canvas id="chartPay"></canvas></div>
+					</div>
+				</div>
+			</section>
+		</div>
 	</main>
 </Layout>
 
+<script>
+	import { Chart, registerables } from 'chart.js';
+	import Papa from 'papaparse';
+	Chart.register(...registerables);
+
+	const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-lPrrC5gMwQTYGCGdIgbda71yA-mTrSsWm59smm44-ysAQU1I0H5eOFb7_3fay6EqY3gmlZjEmR25/pub?gid=1732919789&single=true&output=csv";
+	
+	let chartConcern, chartUpcycling, chartAge, chartStyle, chartStatus, chartWhere, chartFactor, chartCustomize, chartPay;
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const globalHeader = document.querySelector('header');
+		let lastScrollY = window.scrollY;
+		let ticking = false;
+
+		window.addEventListener('scroll', () => {
+			if (!ticking) {
+				window.requestAnimationFrame(() => {
+					const currentScrollY = window.scrollY;
+					if (currentScrollY > lastScrollY && currentScrollY > 80) {
+						globalHeader.classList.add('header-hidden');
+					} else if (currentScrollY < lastScrollY) {
+						globalHeader.classList.remove('header-hidden');
+					}
+					lastScrollY = currentScrollY;
+					ticking = false;
+				});
+				ticking = true;
+			}
+		});
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				entry.target.classList.toggle('is-visible', entry.isIntersecting);
+			});
+		}, { threshold: 0.15 });
+		document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+		const mint = '#6EE5BE';
+		const brown = '#402211';
+		const yellow = '#FFD980';
+		const beige = '#D9CECA';
+
+		Chart.defaults.font.family = "'Inter', sans-serif";
+		Chart.defaults.color = brown; 
+
+		const getLegendOpts = (position = 'bottom') => ({
+			position: position,
+			labels: {
+				usePointStyle: true,
+				pointStyle: 'circle',
+				boxWidth: 8,
+				padding: 15,
+				color: brown,
+				font: { size: 11 },
+				generateLabels: (chart) => {
+					const data = chart.data;
+					if (data.labels.length && data.datasets.length) {
+						const dataset = data.datasets[0];
+						const total = dataset.data.reduce((a, b) => a + b, 0);
+						return data.labels.map((label, i) => {
+							const value = dataset.data[i];
+							const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+							const meta = chart.getDatasetMeta(0);
+							const style = meta.controller.getStyle(i);
+							return {
+								text: `${label} (${percentage}%)`,
+								fillStyle: style.backgroundColor,
+								strokeStyle: style.borderColor,
+								lineWidth: style.borderWidth,
+								pointStyle: 'circle',
+								hidden: isNaN(dataset.data[i]) || meta.data[i].hidden,
+								index: i
+							};
+						});
+					}
+					return [];
+				}
+			}
+		});
+
+		const getTooltipOpts = () => ({
+			backgroundColor: 'rgba(64, 34, 17, 0.95)',
+			titleColor: '#FFD980',
+			bodyColor: '#F9F8F6',
+			padding: 12,
+			cornerRadius: 8,
+			displayColors: false,
+			confine: true,
+			callbacks: {
+				label: function(context) {
+					// ARREGLO AQUÍ: Usamos context.raw en lugar de context.parsed
+					const value = context.raw; 
+					const dataset = context.dataset;
+					const total = dataset.data.reduce((a, b) => a + b, 0);
+					const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+					return `${value} votes (${percentage}%)`;
+				}
+			}
+		});
+
+		function createChart(id, type, config) {
+			const el = document.getElementById(id);
+			if (el) return new Chart(el, { type, ...config });
+			return null;
+		}
+
+		const chartDoughnutConfig = {
+			spacing: 4,
+			borderRadius: 5,
+			borderWidth: 0,
+			hoverOffset: 10
+		};
+
+		chartConcern = createChart('chartConcern', 'doughnut', {
+			data: { 
+				labels: ['1', '2', '3', '4', '5'], 
+				datasets: [{ data: [0,0,0,0,0], backgroundColor: [beige, yellow, mint, brown, '#2C160B'], ...chartDoughnutConfig }] 
+			},
+			options: { cutout: '75%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
+		});
+
+		chartUpcycling = createChart('chartUpcycling', 'doughnut', {
+			data: { labels: ['Know & Buy', 'Know, no buy', 'Don\'t know'], datasets: [{ data: [0,0,0], backgroundColor: [mint, yellow, beige], ...chartDoughnutConfig }] },
+			options: { cutout: '70%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
+		});
+
+		chartStatus = createChart('chartStatus', 'doughnut', {
+			data: { labels: ['Student', 'Working', 'Other'], datasets: [{ data: [0,0,0], backgroundColor: [brown, yellow, beige], ...chartDoughnutConfig }] },
+			options: { cutout: '60%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
+		});
+
+		chartPay = createChart('chartPay', 'doughnut', {
+			data: { labels: ['Under €30', '€30-€50', '€50-€80', 'Over €80'], datasets: [{ data: [0,0,0,0], backgroundColor: [beige, mint, yellow, brown], ...chartDoughnutConfig }] },
+			options: { cutout: '70%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
+		});
+
+		chartAge = createChart('chartAge', 'bar', {
+			data: { labels: ['<18', '18-24', '25-34', '35+'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barPercentage: 0.6 }] },
+			options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { grid: { display: false } }, y: { display: false } } }
+		});
+
+		chartStyle = createChart('chartStyle', 'bar', {
+			data: { labels: ['Streetwear', 'Minimalist', 'Vintage', 'Casual'], datasets: [{ data: [0,0,0,0], backgroundColor: mint, borderRadius: 4, barPercentage: 0.6 }] },
+			options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { grid: { display: false } }, y: { display: false } } }
+		});
+
+		chartWhere = createChart('chartWhere', 'bar', {
+			data: { labels: ['Fast Fashion', 'Second-hand', 'Sustainable', 'Online'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barThickness: 20 }] },
+			options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: brown } } } }
+		});
+
+		chartFactor = createChart('chartFactor', 'radar', {
+			data: { labels: ['Price', 'Sustainability', 'Unique Design', 'Brand Status'], datasets: [{ data: [0,0,0,0], backgroundColor: 'rgba(110, 229, 190, 0.3)', borderColor: mint, pointBackgroundColor: brown, borderWidth: 2, pointRadius: 4 }] },
+			options: { plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, layout: { padding: 20 }, scales: { r: { ticks: { display: false }, grid: { color: 'rgba(64, 34, 17, 0.1)' }, pointLabels: { font: { size: 13, weight: '600' }, color: brown } } } }
+		});
+
+		chartCustomize = createChart('chartCustomize', 'bar', {
+			data: { labels: ['T-Shirt', 'Tote Bag', 'Jacket', 'Pants'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barThickness: 30 }] },
+			options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { grid: { display: false } }, y: { display: false } } }
+		});
+
+		async function fetchAndUpdateData() {
+			try {
+				const response = await fetch(CSV_URL);
+				const csvText = await response.text();
+				
+				Papa.parse(csvText, {
+					header: true, 
+					skipEmptyLines: true,
+					complete: (results) => {
+						const data = results.data;
+						if (data.length === 0) return; 
+
+						const getCol = (row, searchString) => {
+							const key = Object.keys(row).find(k => k.includes(searchString));
+							return key ? row[key] : null;
+						};
+
+						let concern = { '1':0, '2':0, '3':0, '4':0, '5':0 };
+						let upcycling = { 'Yes, and I buy it':0, 'Yes, but I don\'t buy it':0, 'No, I don\'t know what it means':0 };
+						let age = { 'Under 18':0, '18-24':0, '25-34':0, '35+':0 };
+						let style = { 'Streetwear':0, 'Minimalist':0, 'Vintage':0, 'Casual':0 }; 
+						let status = { 'Student':0, 'Working':0, 'Other':0 };
+						let where = { 'Fast Fashion':0, 'Second-hand':0, 'Sustainable':0, 'Online':0 };
+						let factor = { 'Price':0, 'Sustainability':0, 'Unique design':0, 'Brand status':0 };
+						let customize = { 'T-Shirt':0, 'Tote Bag':0, 'Jacket':0, 'Pants':0 };
+						let pay = { 'Under €30':0, '€30-€50':0, '€50-€80':0, 'Over €80':0 };
+
+						data.forEach(row => {
+							const rConcern = getCol(row, 'concerned');
+							if (rConcern && concern[rConcern] !== undefined) concern[rConcern]++;
+
+							const rUpcycling = getCol(row, 'Upcycling');
+							if (rUpcycling) {
+								if (rUpcycling.includes('Yes, and I buy')) upcycling['Yes, and I buy it']++;
+								else if (rUpcycling.includes('Yes, but')) upcycling['Yes, but I don\'t buy it']++;
+								else if (rUpcycling.includes('No')) upcycling['No, I don\'t know what it means']++;
+							}
+
+							const rAge = getCol(row, 'Age');
+							if (rAge && age[rAge] !== undefined) age[rAge]++;
+
+							const rStyle = getCol(row, 'style');
+							if (rStyle) {
+								if (rStyle.includes('Street')) style['Streetwear']++;
+								else if (rStyle.includes('Minimal')) style['Minimalist']++;
+								else if (rStyle.includes('Vintage')) style['Vintage']++;
+								else if (rStyle.includes('Casual')) style['Casual']++;
+							}
+
+							const rStatus = getCol(row, 'status');
+							if (rStatus && status[rStatus] !== undefined) status[rStatus]++;
+
+							const rWhere = getCol(row, 'buy your clothes');
+							if (rWhere) {
+								if (rWhere.includes('Fast fashion')) where['Fast Fashion']++;
+								else if (rWhere.includes('Second-hand')) where['Second-hand']++;
+								else if (rWhere.includes('Online')) where['Online']++;
+								else if (rWhere.includes('Sustainable')) where['Sustainable']++;
+							}
+
+							const rFactor = getCol(row, 'important factor');
+							if (rFactor && factor[rFactor] !== undefined) factor[rFactor]++;
+
+							const rCustomize = getCol(row, 'customize');
+							if (rCustomize) {
+								if (rCustomize.includes('T-shirt') || rCustomize.includes('T-Shirt')) customize['T-Shirt']++;
+								else if (rCustomize.includes('Tote')) customize['Tote Bag']++;
+								else if (rCustomize.includes('Jacket')) customize['Jacket']++;
+								else if (rCustomize.includes('Pants')) customize['Pants']++;
+							}
+
+							const rPay = getCol(row, 'would you pay');
+							if (rPay) {
+								if (rPay.includes('Under')) pay['Under €30']++;
+								else if (rPay.includes('30') && rPay.includes('50')) pay['€30-€50']++;
+								else if (rPay.includes('50') && rPay.includes('80')) pay['€50-€80']++;
+								else if (rPay.includes('Over')) pay['Over €80']++;
+							}
+						});
+
+						chartConcern.data.datasets[0].data = [concern['1'], concern['2'], concern['3'], concern['4'], concern['5']];
+						chartUpcycling.data.datasets[0].data = [upcycling['Yes, and I buy it'], upcycling['Yes, but I don\'t buy it'], upcycling['No, I don\'t know what it means']];
+						chartAge.data.datasets[0].data = [age['Under 18'], age['18-24'], age['25-34'], age['35+']];
+						chartStyle.data.datasets[0].data = [style['Streetwear'], style['Minimalist'], style['Vintage'], style['Casual']];
+						chartStatus.data.datasets[0].data = [status['Student'], status['Working'], status['Other']];
+						chartWhere.data.datasets[0].data = [where['Fast Fashion'], where['Second-hand'], where['Sustainable'], where['Online']];
+						chartFactor.data.datasets[0].data = [factor['Price'], factor['Sustainability'], factor['Unique design'], factor['Brand status']];
+						chartCustomize.data.datasets[0].data = [customize['T-Shirt'], customize['Tote Bag'], customize['Jacket'], customize['Pants']];
+						chartPay.data.datasets[0].data = [pay['Under €30'], pay['€30-€50'], pay['€50-€80'], pay['Over €80']];
+
+						chartConcern.update(); chartUpcycling.update(); chartAge.update(); chartStyle.update();
+						chartStatus.update(); chartWhere.update(); chartFactor.update(); chartCustomize.update(); chartPay.update();
+					}
+				});
+			} catch (error) {
+				console.error("Error cargando los datos:", error);
+			}
+		}
+
+		fetchAndUpdateData();
+		setInterval(fetchAndUpdateData, 60000);
+	});
+</script>
+
 <style>
-	.impact-page {
-		background-color: var(--marron);
-		color: var(--blanco-roto);
-		min-height: 100vh;
-		padding-bottom: 10rem;
+	:global(header) {
+		transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		will-change: transform;
 	}
+	:global(header.header-hidden) { transform: translateY(-100%); }
 
-	/* HEADER */
-	.impact-header {
-		text-align: center;
-		max-width: 800px;
-		margin: 0 auto;
-		padding: 10rem 2rem 8rem;
-	}
-
-	.tagline {
-		display: block;
-		font-size: 0.8rem;
-		text-transform: uppercase;
-		letter-spacing: 3px;
-		color: var(--amarillo);
-		margin-bottom: 1.5rem;
-		font-weight: 600;
-	}
-
-	.impact-header h1 { font-size: 5rem; margin-bottom: 2rem; line-height: 1; }
+	.impact-page { background-color: var(--marron); color: var(--marron); min-height: 100vh; }
+	.content-wrapper { position: relative; z-index: 2; padding-bottom: 10rem; }
+	.impact-header { text-align: center; max-width: 800px; margin: 0 auto; padding: 12rem 2rem 8rem; }
+	.tagline { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--amarillo); margin-bottom: 1.5rem; font-weight: 600; }
+	.impact-header h1 { font-size: 5rem; margin-bottom: 2rem; line-height: 1; color: var(--blanco-roto); }
 	.accent { font-style: italic; color: var(--turquesa); }
 	.impact-header p { font-size: 1.2rem; opacity: 0.8; line-height: 1.6; }
-
-	/* ESTRUCTURA DE SECCIONES */
-	.impact-section {
-		max-width: 1200px;
-		margin: 0 auto 10rem;
-		padding: 0 2rem;
-	}
-
-	.section-header {
-		margin-bottom: 4rem;
-		border-bottom: 1px solid rgba(255,255,255,0.1);
-		padding-bottom: 2rem;
-	}
-
-	.section-num {
-		font-family: var(--font-display);
-		font-size: 2rem;
-		color: var(--turquesa);
-		font-weight: 600;
-		display: block;
-		margin-bottom: 0.5rem;
-	}
-
-	.section-header h2 { font-size: 3rem; margin-bottom: 1rem; }
-	.section-header p { font-size: 1.1rem; opacity: 0.6; max-width: 600px; }
-
-	/* GRIDS DE DATOS */
-	.data-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 3rem;
-	}
-
-	.data-grid.three-cols {
-		grid-template-columns: repeat(3, 1fr);
-	}
-
-	/* TARJETAS DE GRÁFICOS */
-	.chart-card {
-		background-color: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.05);
-		padding: 3rem;
-		border-radius: 40px; /* Bordes muy redondeados */
-		transition: transform 0.4s ease;
-	}
-
-	.chart-card:hover {
-		transform: translateY(-5px);
-		background-color: rgba(255, 255, 255, 0.05);
-	}
-
-	/* Colores de tarjetas (Estricto a la paleta) */
-	.chart-card.beige-bg { background-color: var(--beige); color: var(--marron); }
-	.chart-card.turquoise-bg { background-color: var(--turquesa); color: var(--marron); }
-	.chart-card.yellow-bg { background-color: var(--amarillo); color: var(--marron); }
-	
-	/* Los textos en tarjetas de color deben ser oscuros */
-	.chart-card.beige-bg h3, .chart-card.turquoise-bg h3, .chart-card.yellow-bg h3 { color: var(--marron); }
-	.chart-card.beige-bg .chart-desc, .chart-card.turquoise-bg .chart-desc, .chart-card.yellow-bg .chart-desc { color: var(--marron); opacity: 0.7; }
-
-	.chart-card h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-	.chart-desc { font-size: 0.9rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.5; }
-
-	/* PLACEHOLDER DE GRÁFICOS */
-	.placeholder-chart {
-		width: 100%;
-		height: 250px;
-		border: 2px dashed rgba(255,255,255,0.2); /* Borde punteado sobre fondo oscuro */
-		border-radius: 20px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		padding: 2rem;
-		font-size: 0.85rem;
-		letter-spacing: 1px;
-		opacity: 0.6;
-	}
-
-	/* Ajuste del borde punteado para tarjetas de colores */
-	.chart-card.beige-bg .placeholder-chart, 
-	.chart-card.turquoise-bg .placeholder-chart, 
-	.chart-card.yellow-bg .placeholder-chart {
-		border-color: rgba(64, 34, 17, 0.2);
-		color: var(--marron);
-	}
-
-	.small-chart { height: 180px; }
-
-	/* RESPONSIVE */
+	.impact-section { max-width: 1200px; margin: 0 auto 10rem; padding: 0 2rem; }
+	.section-header { margin-bottom: 4rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2rem; }
+	.section-num { font-family: var(--font-display); font-size: 2rem; color: var(--turquesa); font-weight: 600; display: block; margin-bottom: 0.5rem; }
+	.section-header h2 { font-size: 3rem; margin-bottom: 1rem; color: var(--blanco-roto); }
+	.section-header p { font-size: 1.1rem; opacity: 0.6; max-width: 600px; color: var(--blanco-roto); }
+	.data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+	.data-grid.three-cols { grid-template-columns: repeat(3, 1fr); }
+	.chart-card { padding: 3rem; border-radius: 40px; display: flex; flex-direction: column; color: var(--marron); background-color: var(--blanco-roto); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+	.chart-card h3 { font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--marron); }
+	.chart-desc { font-size: 0.9rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.5; color: var(--marron); }
+	.canvas-container { position: relative; flex-grow: 1; display: flex; align-items: center; justify-content: center; max-height: 300px; }
+	.small-canvas { max-height: 260px; }
+	.chart-card canvas { max-width: 100%; max-height: 100%; }
+	.fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+	.fade-in.is-visible { opacity: 1; transform: translateY(0); }
 	@media (max-width: 1024px) {
 		.data-grid, .data-grid.three-cols { grid-template-columns: 1fr; gap: 2rem; }
 		.impact-header h1 { font-size: 3.5rem; }
 		.chart-card { padding: 2rem; }
+	}
+</style>
+<style is:global>
+	/* Forzar header oscuro solo en Impact */
+	body:has(.impact-page) header {
+		background-color: var(--marron);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+	
+	/* Cambiar color de los enlaces y el texto de Log in */
+	body:has(.impact-page) header nav a, 
+	body:has(.impact-page) header #auth-trigger {
+		color: var(--blanco-roto);
+	}
+
+	/* El botón de Customize en Impact (para que contraste) */
+	body:has(.impact-page) header .btn-nav {
+		background-color: var(--turquesa);
+		color: var(--marron);
+	}
+	
+	body:has(.impact-page) header .btn-nav:hover {
+		background-color: var(--amarillo);
 	}
 </style>
