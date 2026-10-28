@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="Your Cart | Arethe Physis Studios">
+<Layout title="Your Cart | Arethé Physis Studios">
 	<main class="cart-page">
 		
 		<header class="cart-header">
@@ -42,7 +42,7 @@ import Layout from '../layouts/Layout.astro';
 			<div class="modal-content">
 				<div class="check-icon">✓</div>
 				<h2>Order Confirmed!</h2>
-				<p>Thank you for choosing Arethe. This is a simulated checkout for our school project.</p>
+				<p>Thank you for choosing Arethé. This is a simulated checkout for our school project.</p>
 				<button id="btn-close-modal" class="btn">Back to Home</button>
 			</div>
 		</div>
@@ -61,7 +61,7 @@ import Layout from '../layouts/Layout.astro';
 		const checkoutModal = document.getElementById('checkout-modal');
 		const btnCloseModal = document.getElementById('btn-close-modal');
 
-		let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
+		let cart = JSON.parse(localStorage.getItem('Arethé_cart')) || [];
 
 		function renderCart() {
 			const existingItems = cartItemsContainer.querySelectorAll('.cart-item');
@@ -128,7 +128,7 @@ import Layout from '../layouts/Layout.astro';
 				btn.addEventListener('click', (e) => {
 					const index = e.target.getAttribute('data-index');
 					cart.splice(index, 1);
-					localStorage.setItem('arethe_cart', JSON.stringify(cart));
+					localStorage.setItem('Arethé_cart', JSON.stringify(cart));
 					renderCart();
 				});
 			});
@@ -138,7 +138,7 @@ import Layout from '../layouts/Layout.astro';
 
 		btnCheckout.addEventListener('click', () => {
 			checkoutModal.style.display = 'flex';
-			localStorage.removeItem('arethe_cart');
+			localStorage.removeItem('Arethé_cart');
 			cart = [];
 			renderCart();
 		});

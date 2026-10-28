@@ -2,7 +2,8 @@
 // Header.astro
 ---
 <header>
-	<a href="/" class="logo">Arethe</a>
+	<a href="/" class="logo">
+    <img src="/logo-brown.png" alt="Arethe Physis Studios" class="logo-img" /></a>
 	<nav>
 		<a href="/collection">Collection</a>
 		<a href="/process">Process</a>
@@ -54,7 +55,7 @@
 		const modalDesc = document.getElementById('modal-desc');
 
 		// Comprobar si el usuario ya está logueado
-		let currentUser = JSON.parse(localStorage.getItem('arethe_user')) || null;
+		let currentUser = JSON.parse(localStorage.getItem('Arethé_user')) || null;
 
 		function updateUI() {
 			if (currentUser) {
@@ -69,7 +70,7 @@
 				formFields.style.display = 'flex';
 				btnSubmitAuth.style.display = 'block';
 				btnLogout.style.display = 'none';
-				modalTitle.textContent = 'Welcome to Arethe';
+				modalTitle.textContent = 'Welcome to Arethé';
 				modalDesc.textContent = 'Sign in to save your custom designs and track your orders.';
 			}
 		}
@@ -93,14 +94,14 @@
 			const email = userEmailInput.value;
 			
 			currentUser = { name, email };
-			localStorage.setItem('arethe_user', JSON.stringify(currentUser));
+			localStorage.setItem('Arethé_user', JSON.stringify(currentUser));
 			updateUI();
 		});
 
 		// Cerrar Sesión
 		btnLogout.addEventListener('click', () => {
 			currentUser = null;
-			localStorage.removeItem('arethe_user');
+			localStorage.removeItem('Arethé_user');
 			updateUI();
 			authModal.style.display = 'none';
 		});
@@ -201,6 +202,16 @@
 	.btn-logout {
 		width: 100%; padding: 1rem; background-color: transparent; color: #d9534f;
 		border: 1px solid #d9534f; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer;
+	}
+	.logo-img {
+		height: 80px; /* Subimos de 45px a 75px para que gane presencia */
+		width: auto;
+		display: block;
+		transition: opacity 0.2s;
+		margin: -40px 0; /* Margen negativo para compensar el espacio en blanco de la imagen y que no rompa el header */
+	}
+	.logo-img:hover {
+		opacity: 0.8;
 	}
 
 	@keyframes popIn {

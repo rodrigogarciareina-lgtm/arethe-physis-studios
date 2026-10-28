@@ -1,19 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="About Us | Arethe Physis Studios">
+<Layout title="About Us | Arethé Physis Studios">
 	<main class="about-page">
 		
 		<header class="about-header">
 			<h1>The Virtue <br/>of <span class="accent">Nature.</span></h1>
-			<p>Arethe Physis Studios is not just a brand. It's a rebellion against the disposable culture of fast fashion.</p>
+			<p>Arethé Physis Studios is not just a brand. It's a rebellion against the disposable culture of fast fashion.</p>
 		</header>
 
 		<section class="manifesto-section">
 			<div class="manifesto-text">
 				<span class="label">Our Philosophy</span>
 				<h2>Where does the name come from?</h2>
-				<p><strong>Arethe (Areté)</strong> is an ancient Greek concept meaning "excellence" or "virtue of the highest kind". <strong>Physis</strong> means "nature".</p>
+				<p><strong>Arethé (Arêté)</strong> is an ancient Greek concept meaning "excellence" or "virtue of the highest kind". <strong>Physis</strong> means "nature".</p>
 				<p>We believe that true excellence is found in nature. By rescuing textile waste and turning it into exclusive streetwear, we honor the materials and the planet.</p>
 			</div>
 			<div class="decorative-blob turquoise-blob"></div>
@@ -26,18 +26,27 @@ import Layout from '../layouts/Layout.astro';
 			</div>
 
 			<div class="team-grid">
+				<!-- Miembro 1 -->
 				<div class="team-member">
-					<div class="member-photo beige-blob">[ V8 - Rodrigo Photo ]</div>
+					<div class="member-photo beige-blob">
+						<img src="/team-rodrigo.jpg" alt="Rodrigo" class="team-img" />
+					</div>
 					<h3>Rodrigo</h3>
 					<span>Project Manager & Tech</span>
 				</div>
+				<!-- Miembro 2 -->
 				<div class="team-member">
-					<div class="member-photo yellow-blob">[ V8 - Romina Photo ]</div>
+					<div class="member-photo yellow-blob">
+						<img src="/team-romina.jpg" alt="Romina" class="team-img" />
+					</div>
 					<h3>Romina</h3>
 					<span>Writing & Business Strategy</span>
 				</div>
+				<!-- Miembro 3 -->
 				<div class="team-member">
-					<div class="member-photo turquoise-blob">[ V8 - Fatma Photo ]</div>
+					<div class="member-photo turquoise-blob">
+						<img src="/team-fatma.jpg" alt="Fatma" class="team-img" />
+					</div>
 					<h3>Fatma</h3>
 					<span>Creative Director & Design</span>
 				</div>
@@ -79,16 +88,37 @@ import Layout from '../layouts/Layout.astro';
 		width: 200px; height: 200px; margin-bottom: 1.5rem; border-radius: 50%;
 		transition: transform 0.4s ease;
 		display: flex; justify-content: center; align-items: center;
-		font-size: 0.8rem; font-weight: 600; color: var(--marron); text-align: center; padding: 1rem;
+		/* ELIMINA O COMENTA ESTA LÍNEA: */ padding: 0.25rem;
+		overflow: hidden; /* Añade esto para que la foto no se salga del círculo */
 	}
 
-	.team-member:hover .member-photo { transform: scale(1.05) rotate(5deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+	
+	/* OPCIÓN A: Solo se amplía (Efecto activo) */
+	.team-member:hover .member-photo { 
+		transform: scale(1.05); 
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; 
+	}
+
+	/* OPCIÓN B: Se amplía y rota (Descomenta estas líneas si prefieres este efecto) */
+	/*
+	.team-member:hover .member-photo { 
+		transform: scale(1.05) rotate(5deg); 
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; 
+	}
+	*/
 	.team-member h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--blanco-roto); }
 	.team-member span { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
 
 	.beige-blob { background-color: var(--beige); }
 	.turquoise-blob { background-color: var(--turquesa); }
 	.yellow-blob { background-color: var(--amarillo); }
+
+	.team-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover; /* Para que la foto no se aplaste */
+		border-radius: inherit; /* Hereda la forma de la burbuja */
+	}
 
 	@keyframes morph {
 		0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }

@@ -1,0 +1,246 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Our Impact | Arethe Physis Studios">
+	<main class="impact-page">
+		
+		<header class="impact-header">
+			<span class="tagline">Data-driven Sustainability</span>
+			<h1>The <span class="accent">Impact</span> Report</h1>
+			<p>We don't just talk about change. Here is the data from our market research proving that the future of fashion is circular.</p>
+		</header>
+
+		<!-- BLOQUE 1: EL PROBLEMA (Sostenibilidad) -->
+		<section class="impact-section">
+			<div class="section-header">
+				<span class="section-num">01</span>
+				<h2>The Problem: Fast Fashion</h2>
+				<p>We asked our audience how they feel about the current state of the industry.</p>
+			</div>
+			
+			<div class="data-grid">
+				<!-- Gráfico 1: Concern -->
+				<div class="chart-card beige-bg">
+					<h3>Environmental Concern</h3>
+					<p class="chart-desc">On a scale of 1 to 5, how concerned are you about fast fashion's impact?</p>
+					<div class="placeholder-chart">
+						[ Gráfico 1: Donut Chart — Nivel de Preocupación ]
+					</div>
+				</div>
+
+				<!-- Gráfico 2: Upcycling Knowledge -->
+				<div class="chart-card turquoise-bg">
+					<h3>Do you know what Upcycling is?</h3>
+					<p class="chart-desc">We tested the awareness of circular fashion concepts.</p>
+					<div class="placeholder-chart">
+						[ Gráfico 2: Pie Chart — Conocimiento de Upcycling ]
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- BLOQUE 2: EL PERFIL (Quién compra) -->
+		<section class="impact-section">
+			<div class="section-header">
+				<span class="section-num">02</span>
+				<h2>Who is our customer?</h2>
+				<p>Understanding the demographics and style preferences of our target market.</p>
+			</div>
+			
+			<div class="data-grid three-cols">
+				<!-- Gráfico 3: Age -->
+				<div class="chart-card">
+					<h3>Age Demographics</h3>
+					<div class="placeholder-chart small-chart">[ Gráfico 3: Bar Chart — Edades ]</div>
+				</div>
+				
+				<!-- Gráfico 4: Style -->
+				<div class="chart-card">
+					<h3>Style Preferences</h3>
+					<div class="placeholder-chart small-chart">[ Gráfico 4: Bar Chart — Estilos (Streetwear, Vintage, etc.) ]</div>
+				</div>
+
+				<!-- Gráfico 5: Status -->
+				<div class="chart-card">
+					<h3>Current Status</h3>
+					<div class="placeholder-chart small-chart">[ Gráfico 5: Pie Chart — Estudiante/Trabajador ]</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- BLOQUE 3: LOS HÁBITOS (Cómo compran) -->
+		<section class="impact-section">
+			<div class="section-header">
+				<span class="section-num">03</span>
+				<h2>Shopping Habits</h2>
+				<p>How often do they buy, where do they go, and what drives their decisions?</p>
+			</div>
+			
+			<div class="data-grid">
+				<!-- Gráfico 6: Where they buy -->
+				<div class="chart-card yellow-bg">
+					<h3>Where do you usually buy clothes?</h3>
+					<div class="placeholder-chart">[ Gráfico 6: Horizontal Bar Chart — Fast Fashion vs Thrift ]</div>
+				</div>
+
+				<!-- Gráfico 7: Most important factor -->
+				<div class="chart-card">
+					<h3>Most important factor</h3>
+					<div class="placeholder-chart">[ Gráfico 7: Radar Chart — Precio vs Sostenibilidad vs Diseño ]</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- BLOQUE 4: EL FIT CON ARETHE (Nuestra oportunidad) -->
+		<section class="impact-section">
+			<div class="section-header">
+				<span class="section-num">04</span>
+				<h2>The Arethe Opportunity</h2>
+				<p>Validating our business model: customization and willingness to pay.</p>
+			</div>
+			
+			<div class="data-grid">
+				<!-- Gráfico 8: Customization -->
+				<div class="chart-card turquoise-bg">
+					<h3>What would you customize?</h3>
+					<p class="chart-desc">Proving the demand for our visual customizer.</p>
+					<div class="placeholder-chart">[ Gráfico 8: Bubble Chart — Prendas a customizar ]</div>
+				</div>
+
+				<!-- Gráfico 9: Willingness to pay -->
+				<div class="chart-card beige-bg">
+					<h3>Willingness to Pay</h3>
+					<p class="chart-desc">How much would you pay for a unique, upcycled piece?</p>
+					<div class="placeholder-chart">[ Gráfico 9: Bar Chart — Rangos de Precio ]</div>
+				</div>
+			</div>
+		</section>
+
+	</main>
+</Layout>
+
+<style>
+	.impact-page {
+		background-color: var(--marron);
+		color: var(--blanco-roto);
+		min-height: 100vh;
+		padding-bottom: 10rem;
+	}
+
+	/* HEADER */
+	.impact-header {
+		text-align: center;
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 10rem 2rem 8rem;
+	}
+
+	.tagline {
+		display: block;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 3px;
+		color: var(--amarillo);
+		margin-bottom: 1.5rem;
+		font-weight: 600;
+	}
+
+	.impact-header h1 { font-size: 5rem; margin-bottom: 2rem; line-height: 1; }
+	.accent { font-style: italic; color: var(--turquesa); }
+	.impact-header p { font-size: 1.2rem; opacity: 0.8; line-height: 1.6; }
+
+	/* ESTRUCTURA DE SECCIONES */
+	.impact-section {
+		max-width: 1200px;
+		margin: 0 auto 10rem;
+		padding: 0 2rem;
+	}
+
+	.section-header {
+		margin-bottom: 4rem;
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+		padding-bottom: 2rem;
+	}
+
+	.section-num {
+		font-family: var(--font-display);
+		font-size: 2rem;
+		color: var(--turquesa);
+		font-weight: 600;
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+
+	.section-header h2 { font-size: 3rem; margin-bottom: 1rem; }
+	.section-header p { font-size: 1.1rem; opacity: 0.6; max-width: 600px; }
+
+	/* GRIDS DE DATOS */
+	.data-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+	}
+
+	.data-grid.three-cols {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	/* TARJETAS DE GRÁFICOS */
+	.chart-card {
+		background-color: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		padding: 3rem;
+		border-radius: 40px; /* Bordes muy redondeados */
+		transition: transform 0.4s ease;
+	}
+
+	.chart-card:hover {
+		transform: translateY(-5px);
+		background-color: rgba(255, 255, 255, 0.05);
+	}
+
+	/* Colores de tarjetas (Estricto a la paleta) */
+	.chart-card.beige-bg { background-color: var(--beige); color: var(--marron); }
+	.chart-card.turquoise-bg { background-color: var(--turquesa); color: var(--marron); }
+	.chart-card.yellow-bg { background-color: var(--amarillo); color: var(--marron); }
+	
+	/* Los textos en tarjetas de color deben ser oscuros */
+	.chart-card.beige-bg h3, .chart-card.turquoise-bg h3, .chart-card.yellow-bg h3 { color: var(--marron); }
+	.chart-card.beige-bg .chart-desc, .chart-card.turquoise-bg .chart-desc, .chart-card.yellow-bg .chart-desc { color: var(--marron); opacity: 0.7; }
+
+	.chart-card h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+	.chart-desc { font-size: 0.9rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.5; }
+
+	/* PLACEHOLDER DE GRÁFICOS */
+	.placeholder-chart {
+		width: 100%;
+		height: 250px;
+		border: 2px dashed rgba(255,255,255,0.2); /* Borde punteado sobre fondo oscuro */
+		border-radius: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		padding: 2rem;
+		font-size: 0.85rem;
+		letter-spacing: 1px;
+		opacity: 0.6;
+	}
+
+	/* Ajuste del borde punteado para tarjetas de colores */
+	.chart-card.beige-bg .placeholder-chart, 
+	.chart-card.turquoise-bg .placeholder-chart, 
+	.chart-card.yellow-bg .placeholder-chart {
+		border-color: rgba(64, 34, 17, 0.2);
+		color: var(--marron);
+	}
+
+	.small-chart { height: 180px; }
+
+	/* RESPONSIVE */
+	@media (max-width: 1024px) {
+		.data-grid, .data-grid.three-cols { grid-template-columns: 1fr; gap: 2rem; }
+		.impact-header h1 { font-size: 3.5rem; }
+		.chart-card { padding: 2rem; }
+	}
+</style>

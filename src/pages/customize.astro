@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="Customize | Arethe Physis Studios">
+<Layout title="Customize | Arethé Physis Studios">
 	<main class="customizer">
 		
 		<aside class="options-panel">
@@ -260,9 +260,9 @@ import Layout from '../layouts/Layout.astro';
 				patchScale: currentSize / 60
 			};
 
-			let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
+			let cart = JSON.parse(localStorage.getItem('Arethé_cart')) || [];
 			cart.push(item);
-			localStorage.setItem('arethe_cart', JSON.stringify(cart));
+			localStorage.setItem('Arethé_cart', JSON.stringify(cart));
 
 			btnCustomSave.textContent = 'Added to Cart!';
 			btnCustomSave.style.backgroundColor = 'var(--turquesa)';
