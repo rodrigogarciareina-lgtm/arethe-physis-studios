@@ -145,4 +145,18 @@ import { products } from '../data/products.js';
 	@keyframes syncCycleA { 0%, 45% { opacity: 1; transform: scale(1); } 50%, 95% { opacity: 0; transform: scale(0.2); } 100% { opacity: 1; transform: scale(1); } }
 	@keyframes syncCycleB { 0%, 45% { opacity: 0; transform: scale(0.2); } 50%, 95% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.2); } }
 	@media (max-width: 768px) { .collection-page { padding: 4rem 1.5rem; } .page-header h1 { font-size: 3rem; } .product-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem 1rem; } }
+	@media (max-width: 900px) {
+		.product-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 3rem 1.5rem;
+		}
+	}
+	@media (max-width: 550px) {
+		.product-grid {
+			grid-template-columns: 1fr;
+			gap: 4rem;
+		}
+		.card-visual { max-width: 260px; margin: 0 auto 1.5rem; }
+		.page-header h1 { font-size: 3rem; }
+	}
 </style>

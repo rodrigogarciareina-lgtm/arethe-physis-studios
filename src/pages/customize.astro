@@ -317,4 +317,21 @@ import Layout from '../layouts/Layout.astro';
 		.options-panel { border-right: none; border-bottom: 1px solid #EAEAEA; padding: 2rem; }
 		.preview-area { padding: 2rem; }
 	}
+	@media (max-width: 900px) {
+		.customizer {
+			grid-template-columns: 1fr;
+		}
+		.options-panel {
+			border-right: none;
+			border-bottom: 1px solid #EAEAEA;
+			padding: 2rem 1.5rem;
+		}
+		.preview-area {
+			padding: 2rem 1.5rem;
+			min-height: 50vh;
+		}
+		.patches-grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
 </style>

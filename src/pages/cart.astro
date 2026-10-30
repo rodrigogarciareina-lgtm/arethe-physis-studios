@@ -348,4 +348,13 @@ import Layout from '../layouts/Layout.astro';
 		.item-price { grid-column: 2; font-size: 1rem; }
 		.cart-summary { position: static; padding: 2rem; }
 	}
+	@media (max-width: 600px) {
+		.cart-page { padding: 4rem 1rem; }
+		.cart-header h1 { font-size: 2.5rem; }
+		.cart-item { grid-template-columns: 1fr; text-align: center; }
+		.item-image { width: 100px; height: 100px; margin: 0 auto; }
+		.item-price { margin-top: 1rem; text-align: center; justify-content: center; }
+		.btn-remove { margin: 0 auto; display: block; }
+		.btn-checkout { font-size: 0.8rem; padding: 1rem; }
+	}
 </style>

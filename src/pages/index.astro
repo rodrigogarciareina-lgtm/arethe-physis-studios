@@ -262,4 +262,44 @@ import Layout from '../layouts/Layout.astro';
 		.manifesto h2 { font-size: 2.5rem; }
 		.step { margin-top: 0 !important; }
 	}
+	@media (max-width: 768px) {
+		.hero {
+			grid-template-columns: 1fr;
+			padding: 4rem 1.5rem;
+			text-align: center;
+		}
+		.hero h1 {
+			font-size: 3.5rem;
+			letter-spacing: -1px;
+		}
+		.hero .by-nature {
+			font-size: 2.5rem;
+		}
+		.hero-desc {
+			margin: 0 auto 2rem auto;
+		}
+		.hero-visual {
+			margin-top: 3rem;
+		}
+		.blob-container {
+			width: 280px;
+			height: 280px;
+		}
+		/* El manifiesto con forma de ola */
+		.manifesto {
+			padding: 6rem 1.5rem;
+			clip-path: ellipse(180% 100% at 50% 50%);
+		}
+		.manifesto h2 {
+			font-size: 2.5rem;
+		}
+		/* Las tarjetas del proceso */
+		.process {
+			flex-direction: column;
+			padding: 4rem 1.5rem;
+		}
+		.step {
+			margin-top: 0 !important;
+		}
+	}
 </style>
