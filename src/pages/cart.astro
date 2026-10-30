@@ -69,7 +69,7 @@ import Layout from '../layouts/Layout.astro';
 
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
-		// 🛑 PEGA TU URL AQUÍ
+		// 🛑 PEGA TU URL REAL AQUÍ (la que empieza por https://script.google.com...)
 		const API_URL = "https://script.google.com/macros/s/AKfycbxF9P94S19VemYJfcGZD4rREzdBLlXSM5R-01e8Z-CX9Mrj-LktFeI9gL9hG15PKoPc/exec"; 
 		
 		const cartItemsContainer = document.getElementById('cart-items-container');
@@ -86,17 +86,23 @@ import Layout from '../layouts/Layout.astro';
 		let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
 		let currentUser = JSON.parse(localStorage.getItem('arethe_user')) || null;
 
+		// FUNCIÓN JSONP BLINDADA
 		function jsonpRequest(url) {
 			return new Promise((resolve, reject) => {
 				const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
+				const script = document.createElement('script'); // <-- MOVIDO AQUÍ ARRIBA
+				
 				window[callbackName] = (data) => {
 					delete window[callbackName];
-					document.body.removeChild(script);
+					if (document.body.contains(script)) document.body.removeChild(script);
 					resolve(data);
 				};
-				const script = document.createElement('script');
+				
 				script.src = `${url}&callback=${callbackName}`;
-				script.onerror = reject;
+				script.onerror = (e) => {
+					if (document.body.contains(script)) document.body.removeChild(script);
+					reject(e);
+				};
 				document.body.appendChild(script);
 			});
 		}
@@ -138,20 +144,16 @@ import Layout from '../layouts/Layout.astro';
 				let finalPriceNum = 0;
 				let oldPriceDisplay = null;
 
-				// 1. Determinar el precio final y el precio antiguo
 				if (item.discount) {
 					if (item.oldPrice) {
-						// Viene del configurador
 						finalPriceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
 						oldPriceDisplay = item.oldPrice;
 					} else {
-						// Viene de la colección
 						let priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
 						finalPriceNum = priceNum * (1 - (item.discount / 100));
 						oldPriceDisplay = item.price;
 					}
 				} else {
-					// Sin descuento
 					finalPriceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
 				}
 				
@@ -169,7 +171,6 @@ import Layout from '../layouts/Layout.astro';
 					imageHTML = item.image.startsWith('[') ? `<div class="placeholder-mini">${item.image}</div>` : `<img src="${item.image}" />`;
 				}
 
-				// 2. Maquetar el HTML del precio
 				let priceHTML = '';
 				if (item.discount) {
 					priceHTML = `
@@ -179,10 +180,9 @@ import Layout from '../layouts/Layout.astro';
 						</div>
 					`;
 				} else {
-					priceHTML = item.price === '0€' ? 'VIP Reward 🌿' : item.price;
+					priceHTML = item.price === '0€' ? `<span style="color:#2E8B57; font-weight:bold;">${item.laurelCost} 🌿</span>` : item.price;
 				}
 
-				// 3. Badge de descuento
 				const discountBadge = item.discount 
 					? `<span class="discount-badge">🔥 ${item.discount}% OFF</span>` 
 					: '';
@@ -191,7 +191,7 @@ import Layout from '../layouts/Layout.astro';
 					<div class="item-image">${imageHTML}</div>
 					<div class="item-details">
 						<h3>${item.title}</h3>
-						<p>${item.isCustom ? 'Customized Piece' : 'Upcycled Original'}</p>
+						<p>${item.isCustom ? 'Customized Piece' : (item.laurelCost ? 'VIP Reward' : 'Upcycled Original')}</p>
 						${discountBadge}
 						<button class="btn-remove" data-index="${index}" style="margin-top: 0.5rem;">Remove</button>
 					</div>
@@ -201,7 +201,6 @@ import Layout from '../layouts/Layout.astro';
 				cartItemsContainer.appendChild(itemEl);
 			});
 
-			// 4. Lógica de cumpleaños
 			let finalTotal = total;
 			const discountRow = document.getElementById('discount-row');
 			const discountEl = document.getElementById('cart-discount');
@@ -217,7 +216,6 @@ import Layout from '../layouts/Layout.astro';
 				}
 			}
 
-			// 5. Actualizar totales y VAT
 			subtotalEl.textContent = `€${total.toFixed(2)}`;
 			totalEl.textContent = `€${finalTotal.toFixed(2)}`;
 			
@@ -227,7 +225,6 @@ import Layout from '../layouts/Layout.astro';
 			const laurelsToEarn = Math.floor(finalTotal * 10);
 			laurelsEl.textContent = `${laurelsToEarn} 🌿`;
 
-			// 6. Eventos para eliminar
 			document.querySelectorAll('.btn-remove').forEach(btn => {
 				btn.addEventListener('click', (e) => {
 					const index = e.target.getAttribute('data-index');
@@ -243,6 +240,18 @@ import Layout from '../layouts/Layout.astro';
 		btnCheckout.addEventListener('click', async () => {
 			if (!currentUser) {
 				alert("Please log in to complete your purchase and earn Laurels!");
+				return;
+			}
+
+			// 1. CALCULAR LAURELES GASTADOS (Productos VIP)
+			let totalLaurelsSpent = 0;
+			cart.forEach(item => {
+				if (item.laurelCost) totalLaurelsSpent += item.laurelCost;
+			});
+
+			// 2. COMPROBAR SI TIENE SALDO SUFICIENTE
+			if (currentUser.laurels < totalLaurelsSpent) {
+				alert(`You need ${totalLaurelsSpent} Laurels 🌿 to redeem these items. You currently have ${currentUser.laurels}.`);
 				return;
 			}
 
@@ -262,13 +271,16 @@ import Layout from '../layouts/Layout.astro';
 			}
 
 			const itemsString = cart.map(item => `${item.title} (${item.price})`).join(' | ');
-			const url = `${API_URL}?action=create_order&email=${currentUser.email}&total=${finalTotal}&items=${encodeURIComponent(itemsString)}`;
+			
+			// 3. ENVIAR A GOOGLE LAURELS GASTADOS
+			const url = `${API_URL}?action=create_order&email=${currentUser.email}&total=${finalTotal}&items=${encodeURIComponent(itemsString)}&laurelsSpent=${totalLaurelsSpent}`;
 
 			try {
 				const data = await jsonpRequest(url);
 				
 				if (data.status === 'success') {
-					currentUser.laurels += data.laurelsEarned;
+					// 4. ACTUALIZAR LOCAL STORAGE (Sumar ganados, restar gastados)
+					currentUser.laurels = currentUser.laurels - totalLaurelsSpent + data.laurelsEarned;
 					currentUser.ordersCount += 1;
 					localStorage.setItem('arethe_user', JSON.stringify(currentUser));
 					

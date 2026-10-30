@@ -35,7 +35,7 @@ const { product } = Astro.props;
 
 			<div class="actions">
 				<a href={`/customize?id=${product.id}`} class="btn-customize">Customize this piece</a>
-				<button class="btn-cart" id="add-to-cart-btn" data-id={product.id} data-title={product.title} data-price={product.price} data-img={product.images ? product.images[0] : product.img}>Add to cart</button>
+				<button class="btn-cart" id="add-to-cart-btn" data-id={product.id} data-title={product.title} data-price={product.price} data-img={product.images ? product.images[0] : product.img} data-laurel-cost={product.laurelCost || 0}>Add to cart</button>
 			</div>
 		</div>
 
@@ -50,7 +50,8 @@ const { product } = Astro.props;
 							title: btnCart.getAttribute('data-title'),
 							price: btnCart.getAttribute('data-price'),
 							image: btnCart.getAttribute('data-img'),
-							isCustom: false
+							isCustom: false,
+							laurelCost: parseInt(btnCart.getAttribute('data-laurel-cost')) || 0 // <--- AÑADIR ESTO
 						};
 
 						// Guardar en localStorage
