@@ -197,7 +197,7 @@ import Layout from '../layouts/Layout.astro';
 			previewPatch.style.display = 'none';
 		});
 
-		// GUARDAR EN EL CARRITO CON LÓGICA VIP
+		// GUARDAR EN EL CARRITO
 		const btnCustomSave = document.getElementById('btn-custom-save');
 		btnCustomSave.addEventListener('click', () => {
 			if (!currentPatchSrc) {
@@ -219,19 +219,13 @@ import Layout from '../layouts/Layout.astro';
 			if (activeProduct) {
 				finalTitle = `${activeProduct.title} + ${currentPatchSrc}`;
 				basePriceNum = parseFloat(activeProduct.price.replace(/[^0-9.]/g, '')) || 0;
-				
-				// AQUÍ APLICAMOS EL DESCUENTO AL PRECIO BASE
-				if (activeProduct.discount) {
-					basePriceNum = basePriceNum * (1 - (activeProduct.discount / 100));
-				}
-				
 				baseImg = activeProduct.images ? activeProduct.images[0] : activeProduct.img;
 			} else {
 				finalTitle = `Custom Garment + ${currentPatchSrc}`;
 				basePriceNum = 85;
 			}
 
-			// --- LÓGICA DEL PARCHE GRATIS ---
+			// LÓGICA DEL PARCHE GRATIS
 			let currentUser = null;
 			try { currentUser = JSON.parse(localStorage.getItem('arethe_user')); } catch(e) {}
 
@@ -245,13 +239,18 @@ import Layout from '../layouts/Layout.astro';
 				setTimeout(() => { alert("🌟 VIP Reward: Your 3+ purchases have unlocked a ONE-TIME FREE patch!"); }, 100);
 			}
 
-			const finalPriceNum = basePriceNum + patchPrice;
-			const finalPrice = `€${finalPriceNum.toFixed(2)}`;
+			// CÁLCULO DE PRECIOS (CON Y SIN DESCUENTO)
+			const oldTotal = basePriceNum + patchPrice; // Precio original
+			const discountPercent = activeProduct ? activeProduct.discount : 0;
+			const discountMultiplier = discountPercent ? (1 - (discountPercent / 100)) : 1;
+			const newTotal = oldTotal * discountMultiplier; // Precio con descuento
 
 			const item = {
 				id: 'custom-' + Date.now(),
 				title: finalTitle,
-				price: finalPrice,
+				price: `€${newTotal.toFixed(2)}`,
+				oldPrice: discountPercent ? `€${oldTotal.toFixed(2)}` : null, // Solo guardamos oldPrice si hay descuento
+				discount: discountPercent,
 				isCustom: true,
 				baseGarment: baseImg, 
 				baseTextLabel: baseText.textContent, 
@@ -259,7 +258,6 @@ import Layout from '../layouts/Layout.astro';
 				patchLeft: leftPercent,
 				patchTop: topPercent,
 				patchScale: currentSize / 60
-				// OJO: NO PONEMOS 'discount' AQUÍ, PORQUE YA LO HEMOS APLICADO EN basePriceNum
 			};
 
 			let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];

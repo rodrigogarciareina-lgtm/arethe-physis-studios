@@ -25,7 +25,7 @@ import Layout from '../layouts/Layout.astro';
 					<span>Subtotal</span>
 					<span id="cart-subtotal">€0.00</span>
 				</div>
-				
+
 				<div class="summary-row" id="discount-row" style="display: none; color: #d9534f;">
 					<span>Birthday Discount (10%) 🎂</span>
 					<span id="cart-discount">-€0.00</span>
@@ -36,6 +36,11 @@ import Layout from '../layouts/Layout.astro';
 					<span>Calculated at checkout</span>
 				</div>
 				
+				<div class="summary-row" style="font-size: 0.85rem; opacity: 0.5; margin-bottom: 0;">
+					<span>VAT (21% included)</span>
+					<span id="cart-vat">€0.00</span>
+				</div>
+				
 				<div class="summary-row laurels-row">
 					<span>Laurels to earn 🌿</span>
 					<span id="cart-laurels">0</span>
@@ -43,7 +48,7 @@ import Layout from '../layouts/Layout.astro';
 
 				<hr />
 				<div class="summary-row total">
-					<span>Total</span>
+					<span>Total <span style="font-size: 0.8rem; font-weight: 400; opacity: 0.6;">(VAT included)</span></span>
 					<span id="cart-total">€0.00</span>
 				</div>
 				<button id="btn-checkout" class="btn-checkout">Proceed to Checkout</button>
@@ -130,11 +135,24 @@ import Layout from '../layouts/Layout.astro';
 			let total = 0;
 
 			cart.forEach((item, index) => {
-				let priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
-				
-				let finalPriceNum = priceNum;
+				let finalPriceNum = 0;
+				let oldPriceDisplay = null;
+
+				// 1. Determinar el precio final y el precio antiguo
 				if (item.discount) {
-					finalPriceNum = priceNum * (1 - (item.discount / 100));
+					if (item.oldPrice) {
+						// Viene del configurador
+						finalPriceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+						oldPriceDisplay = item.oldPrice;
+					} else {
+						// Viene de la colección
+						let priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+						finalPriceNum = priceNum * (1 - (item.discount / 100));
+						oldPriceDisplay = item.price;
+					}
+				} else {
+					// Sin descuento
+					finalPriceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
 				}
 				
 				total += finalPriceNum;
@@ -151,12 +169,22 @@ import Layout from '../layouts/Layout.astro';
 					imageHTML = item.image.startsWith('[') ? `<div class="placeholder-mini">${item.image}</div>` : `<img src="${item.image}" />`;
 				}
 
-				const priceHTML = item.discount 
-					? `<span style="text-decoration: line-through; font-size: 0.8rem; opacity: 0.5; margin-right: 0.5rem;">${item.price}</span> €${finalPriceNum.toFixed(2)}`
-					: (item.price === '0€' ? 'VIP Reward 🌿' : item.price);
+				// 2. Maquetar el HTML del precio
+				let priceHTML = '';
+				if (item.discount) {
+					priceHTML = `
+						<div class="price-breakdown">
+							<span class="old-price">${oldPriceDisplay}</span>
+							<span class="new-price">€${finalPriceNum.toFixed(2)}</span>
+						</div>
+					`;
+				} else {
+					priceHTML = item.price === '0€' ? 'VIP Reward 🌿' : item.price;
+				}
 
+				// 3. Badge de descuento
 				const discountBadge = item.discount 
-					? `<span style="color: #E53935; font-weight: bold; font-size: 0.8rem; display: block; margin-top: 0.5rem;">🔥 ${item.discount}% OFF</span>` 
+					? `<span class="discount-badge">🔥 ${item.discount}% OFF</span>` 
 					: '';
 
 				itemEl.innerHTML = `
@@ -173,6 +201,7 @@ import Layout from '../layouts/Layout.astro';
 				cartItemsContainer.appendChild(itemEl);
 			});
 
+			// 4. Lógica de cumpleaños
 			let finalTotal = total;
 			const discountRow = document.getElementById('discount-row');
 			const discountEl = document.getElementById('cart-discount');
@@ -188,11 +217,17 @@ import Layout from '../layouts/Layout.astro';
 				}
 			}
 
+			// 5. Actualizar totales y VAT
 			subtotalEl.textContent = `€${total.toFixed(2)}`;
 			totalEl.textContent = `€${finalTotal.toFixed(2)}`;
+			
+			const vatAmount = finalTotal - (finalTotal / 1.21);
+			document.getElementById('cart-vat').textContent = `€${vatAmount.toFixed(2)}`;
+			
 			const laurelsToEarn = Math.floor(finalTotal * 10);
 			laurelsEl.textContent = `${laurelsToEarn} 🌿`;
 
+			// 6. Eventos para eliminar
 			document.querySelectorAll('.btn-remove').forEach(btn => {
 				btn.addEventListener('click', (e) => {
 					const index = e.target.getAttribute('data-index');
@@ -217,7 +252,7 @@ import Layout from '../layouts/Layout.astro';
 			let total = 0;
 			cart.forEach(item => { 
 				let priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
-				if (item.discount) priceNum = priceNum * (1 - (item.discount / 100));
+				if (item.discount && !item.oldPrice) priceNum = priceNum * (1 - (item.discount / 100));
 				total += priceNum; 
 			});
 			
@@ -297,6 +332,13 @@ import Layout from '../layouts/Layout.astro';
 	.modal-content p { opacity: 0.7; margin-bottom: 2rem; line-height: 1.6; }
 	.btn { display: inline-block; background-color: var(--marron); color: var(--blanco-roto); padding: 1rem 2.5rem; border-radius: 50px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; transition: all 0.3s; }
 	.btn:hover { background-color: var(--turquesa); color: var(--marron); }
+
+	/* DESGLOSE DE PRECIOS EN LAS TARJETAS */
+	.price-breakdown { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+	.old-price { text-decoration: line-through; font-size: 0.85rem; opacity: 0.5; }
+	.new-price { font-weight: 700; color: var(--marron); font-size: 1.2rem; }
+	.discount-badge { display: inline-block; background-color: #FFEBEE; color: #E53935; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-top: 0.5rem; letter-spacing: 0.5px; }
+
 	@keyframes morph { 0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; } 100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; } }
 	@keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 	@media (max-width: 900px) {

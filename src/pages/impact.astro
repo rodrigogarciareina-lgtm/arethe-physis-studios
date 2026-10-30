@@ -19,6 +19,7 @@ import Layout from '../layouts/Layout.astro';
 				</div>
 				
 				<div class="data-grid">
+					<!-- Gráfico 1: Barras Verticales (1-5) -->
 					<div class="chart-card fade-in">
 						<h3>Environmental Concern</h3>
 						<p class="chart-desc">On a scale of 1 to 5, how concerned are you about fast fashion's impact?</p>
@@ -67,15 +68,21 @@ import Layout from '../layouts/Layout.astro';
 					<p>How often do they buy, where do they go, and what drives their decisions?</p>
 				</div>
 				
-				<div class="data-grid">
+				<div class="data-grid three-cols">
 					<div class="chart-card fade-in">
-						<h3>Where do you usually buy clothes?</h3>
+						<h3>Where do you buy?</h3>
 						<div class="canvas-container"><canvas id="chartWhere"></canvas></div>
 					</div>
 
 					<div class="chart-card fade-in">
 						<h3>Most important factor</h3>
 						<div class="canvas-container"><canvas id="chartFactor"></canvas></div>
+					</div>
+
+					<!-- Gráfico NUEVO: Presupuesto Mensual -->
+					<div class="chart-card fade-in">
+						<h3>Monthly Budget</h3>
+						<div class="canvas-container"><canvas id="chartBudget"></canvas></div>
 					</div>
 				</div>
 			</section>
@@ -111,7 +118,7 @@ import Layout from '../layouts/Layout.astro';
 
 	const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-lPrrC5gMwQTYGCGdIgbda71yA-mTrSsWm59smm44-ysAQU1I0H5eOFb7_3fay6EqY3gmlZjEmR25/pub?gid=1732919789&single=true&output=csv";
 	
-	let chartConcern, chartUpcycling, chartAge, chartStyle, chartStatus, chartWhere, chartFactor, chartCustomize, chartPay;
+	let chartConcern, chartUpcycling, chartAge, chartStyle, chartStatus, chartWhere, chartFactor, chartCustomize, chartPay, chartBudget;
 
 	document.addEventListener('DOMContentLoaded', () => {
 		const globalHeader = document.querySelector('header');
@@ -149,40 +156,7 @@ import Layout from '../layouts/Layout.astro';
 		Chart.defaults.font.family = "'Inter', sans-serif";
 		Chart.defaults.color = brown; 
 
-		const getLegendOpts = (position = 'bottom') => ({
-			position: position,
-			labels: {
-				usePointStyle: true,
-				pointStyle: 'circle',
-				boxWidth: 8,
-				padding: 15,
-				color: brown,
-				font: { size: 11 },
-				generateLabels: (chart) => {
-					const data = chart.data;
-					if (data.labels.length && data.datasets.length) {
-						const dataset = data.datasets[0];
-						const total = dataset.data.reduce((a, b) => a + b, 0);
-						return data.labels.map((label, i) => {
-							const value = dataset.data[i];
-							const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-							const meta = chart.getDatasetMeta(0);
-							const style = meta.controller.getStyle(i);
-							return {
-								text: `${label} (${percentage}%)`,
-								fillStyle: style.backgroundColor,
-								strokeStyle: style.borderColor,
-								lineWidth: style.borderWidth,
-								pointStyle: 'circle',
-								hidden: isNaN(dataset.data[i]) || meta.data[i].hidden,
-								index: i
-							};
-						});
-					}
-					return [];
-				}
-			}
-		});
+		const legendOpts = { labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, padding: 15, color: brown, font: { size: 11 } } };
 
 		const getTooltipOpts = () => ({
 			backgroundColor: 'rgba(64, 34, 17, 0.95)',
@@ -194,7 +168,6 @@ import Layout from '../layouts/Layout.astro';
 			confine: true,
 			callbacks: {
 				label: function(context) {
-					// ARREGLO AQUÍ: Usamos context.raw en lugar de context.parsed
 					const value = context.raw; 
 					const dataset = context.dataset;
 					const total = dataset.data.reduce((a, b) => a + b, 0);
@@ -210,59 +183,104 @@ import Layout from '../layouts/Layout.astro';
 			return null;
 		}
 
-		const chartDoughnutConfig = {
-			spacing: 4,
-			borderRadius: 5,
-			borderWidth: 0,
-			hoverOffset: 10
-		};
+		const chartDoughnutConfig = { spacing: 4, borderRadius: 5, borderWidth: 0, hoverOffset: 10 };
 
-		chartConcern = createChart('chartConcern', 'doughnut', {
+		// 1. Concern (AHORA ES DE BARRAS)
+		chartConcern = createChart('chartConcern', 'bar', {
 			data: { 
 				labels: ['1', '2', '3', '4', '5'], 
-				datasets: [{ data: [0,0,0,0,0], backgroundColor: [beige, yellow, mint, brown, '#2C160B'], ...chartDoughnutConfig }] 
+				datasets: [{ 
+					data: [0,0,0,0,0], 
+					backgroundColor: brown, 
+					borderRadius: 6, 
+					barPercentage: 0.6 
+				}] 
 			},
-			options: { cutout: '75%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
+			options: { 
+				plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, 
+				scales: { 
+					x: { grid: { display: false }, ticks: { color: brown, font: {weight: 'bold'} } }, 
+					y: { display: false, beginAtZero: true } 
+				} 
+			}
 		});
 
+		// 2. Upcycling (Doughnut)
 		chartUpcycling = createChart('chartUpcycling', 'doughnut', {
 			data: { labels: ['Know & Buy', 'Know, no buy', 'Don\'t know'], datasets: [{ data: [0,0,0], backgroundColor: [mint, yellow, beige], ...chartDoughnutConfig }] },
-			options: { cutout: '70%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
+			options: { cutout: '70%', layout: { padding: 10 }, plugins: { legend: { ...legendOpts, position: 'bottom' }, tooltip: getTooltipOpts() } }
 		});
 
-		chartStatus = createChart('chartStatus', 'doughnut', {
-			data: { labels: ['Student', 'Working', 'Other'], datasets: [{ data: [0,0,0], backgroundColor: [brown, yellow, beige], ...chartDoughnutConfig }] },
-			options: { cutout: '60%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
-		});
-
-		chartPay = createChart('chartPay', 'doughnut', {
-			data: { labels: ['Under €30', '€30-€50', '€50-€80', 'Over €80'], datasets: [{ data: [0,0,0,0], backgroundColor: [beige, mint, yellow, brown], ...chartDoughnutConfig }] },
-			options: { cutout: '70%', layout: { padding: 10 }, plugins: { legend: getLegendOpts('bottom'), tooltip: getTooltipOpts() } }
-		});
-
+		// 3. Age (Bar)
 		chartAge = createChart('chartAge', 'bar', {
 			data: { labels: ['<18', '18-24', '25-34', '35+'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barPercentage: 0.6 }] },
 			options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { grid: { display: false } }, y: { display: false } } }
 		});
 
+		// 4. Style (Bar)
 		chartStyle = createChart('chartStyle', 'bar', {
 			data: { labels: ['Streetwear', 'Minimalist', 'Vintage', 'Casual'], datasets: [{ data: [0,0,0,0], backgroundColor: mint, borderRadius: 4, barPercentage: 0.6 }] },
 			options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { grid: { display: false } }, y: { display: false } } }
 		});
 
+		// 5. Status (Doughnut)
+		chartStatus = createChart('chartStatus', 'doughnut', {
+			data: { labels: ['Student', 'Working', 'Other'], datasets: [{ data: [0,0,0], backgroundColor: [brown, yellow, beige], ...chartDoughnutConfig }] },
+			options: { cutout: '60%', layout: { padding: 10 }, plugins: { legend: { ...legendOpts, position: 'bottom' }, tooltip: getTooltipOpts() } }
+		});
+
+		// 6. Where (Bar Horizontal)
 		chartWhere = createChart('chartWhere', 'bar', {
-			data: { labels: ['Fast Fashion', 'Second-hand', 'Sustainable', 'Online'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barThickness: 20 }] },
-			options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: brown } } } }
+			data: { labels: ['Fast Fashion', 'Second-hand', 'Sustainable', 'Online'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barThickness: 15 }] },
+			options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: brown, font: {size: 10} } } } }
 		});
 
+		// 7. Factor (Radar con Telaraña Premium)
 		chartFactor = createChart('chartFactor', 'radar', {
-			data: { labels: ['Price', 'Sustainability', 'Unique Design', 'Brand Status'], datasets: [{ data: [0,0,0,0], backgroundColor: 'rgba(110, 229, 190, 0.3)', borderColor: mint, pointBackgroundColor: brown, borderWidth: 2, pointRadius: 4 }] },
-			options: { plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, layout: { padding: 20 }, scales: { r: { ticks: { display: false }, grid: { color: 'rgba(64, 34, 17, 0.1)' }, pointLabels: { font: { size: 13, weight: '600' }, color: brown } } } }
+			data: { 
+				labels: ['Price', 'Sustain.', 'Design', 'Brand'], 
+				datasets: [{ 
+					data: [0,0,0,0], 
+					backgroundColor: 'rgba(110, 229, 190, 0.2)', 
+					borderColor: mint, 
+					borderWidth: 2,
+					pointBackgroundColor: brown, 
+					pointBorderColor: '#F9F8F6', 
+					pointBorderWidth: 1.5,
+					pointRadius: 4 
+				}] 
+			},
+			options: { 
+				maintainAspectRatio: false,
+				plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, 
+				layout: { padding: 15 }, 
+				scales: { 
+					r: { 
+						ticks: { display: false }, 
+						grid: { color: 'rgba(64, 34, 17, 0.1)', lineWidth: 1 }, // Telaraña sutil
+						angleLines: { color: 'rgba(64, 34, 17, 0.1)' }, // Líneas radiales sutiles
+						pointLabels: { font: { size: 10, weight: '600' }, color: brown } 
+					} 
+				} 
+			}
 		});
 
+		// 8. Customize (Bar)
 		chartCustomize = createChart('chartCustomize', 'bar', {
 			data: { labels: ['T-Shirt', 'Tote Bag', 'Jacket', 'Pants'], datasets: [{ data: [0,0,0,0], backgroundColor: brown, borderRadius: 4, barThickness: 30 }] },
 			options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { grid: { display: false } }, y: { display: false } } }
+		});
+
+		// 9. Pay (Doughnut)
+		chartPay = createChart('chartPay', 'doughnut', {
+			data: { labels: ['Under €30', '€30-€50', '€50-€80', 'Over €80'], datasets: [{ data: [0,0,0,0], backgroundColor: [beige, mint, yellow, brown], ...chartDoughnutConfig }] },
+			options: { cutout: '70%', layout: { padding: 10 }, plugins: { legend: { ...legendOpts, position: 'bottom' }, tooltip: getTooltipOpts() } }
+		});
+
+		// 10. Budget (NUEVO Gráfico de Barras)
+		chartBudget = createChart('chartBudget', 'bar', {
+			data: { labels: ['<€30', '€30-€60', '€60-€100', '>€100'], datasets: [{ data: [0,0,0,0], backgroundColor: mint, borderRadius: 4, barThickness: 15 }] },
+			options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: getTooltipOpts() }, scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: brown, font: {size: 10} } } } }
 		});
 
 		async function fetchAndUpdateData() {
@@ -291,6 +309,7 @@ import Layout from '../layouts/Layout.astro';
 						let factor = { 'Price':0, 'Sustainability':0, 'Unique design':0, 'Brand status':0 };
 						let customize = { 'T-Shirt':0, 'Tote Bag':0, 'Jacket':0, 'Pants':0 };
 						let pay = { 'Under €30':0, '€30-€50':0, '€50-€80':0, 'Over €80':0 };
+						let budget = { 'Under €30':0, '€30-€60':0, '€60-€100':0, 'Over €100':0 };
 
 						data.forEach(row => {
 							const rConcern = getCol(row, 'concerned');
@@ -343,6 +362,15 @@ import Layout from '../layouts/Layout.astro';
 								else if (rPay.includes('50') && rPay.includes('80')) pay['€50-€80']++;
 								else if (rPay.includes('Over')) pay['Over €80']++;
 							}
+
+							// NUEVO: Extraer Budget
+							const rBudget = getCol(row, 'budget');
+							if (rBudget) {
+								if (rBudget.includes('Under')) budget['Under €30']++;
+								else if (rBudget.includes('30') && rBudget.includes('60')) budget['€30-€60']++;
+								else if (rBudget.includes('60') && rBudget.includes('100')) budget['€60-€100']++;
+								else if (rBudget.includes('Over')) budget['Over €100']++;
+							}
 						});
 
 						chartConcern.data.datasets[0].data = [concern['1'], concern['2'], concern['3'], concern['4'], concern['5']];
@@ -354,9 +382,11 @@ import Layout from '../layouts/Layout.astro';
 						chartFactor.data.datasets[0].data = [factor['Price'], factor['Sustainability'], factor['Unique design'], factor['Brand status']];
 						chartCustomize.data.datasets[0].data = [customize['T-Shirt'], customize['Tote Bag'], customize['Jacket'], customize['Pants']];
 						chartPay.data.datasets[0].data = [pay['Under €30'], pay['€30-€50'], pay['€50-€80'], pay['Over €80']];
+						chartBudget.data.datasets[0].data = [budget['Under €30'], budget['€30-€60'], budget['€60-€100'], budget['Over €100']];
 
 						chartConcern.update(); chartUpcycling.update(); chartAge.update(); chartStyle.update();
-						chartStatus.update(); chartWhere.update(); chartFactor.update(); chartCustomize.update(); chartPay.update();
+						chartStatus.update(); chartWhere.update(); chartFactor.update(); chartCustomize.update(); 
+						chartPay.update(); chartBudget.update();
 					}
 				});
 			} catch (error) {
@@ -376,7 +406,7 @@ import Layout from '../layouts/Layout.astro';
 	}
 	:global(header.header-hidden) { transform: translateY(-100%); }
 
-	.impact-page { background-color: var(--marron); color: var(--marron); min-height: 100vh; }
+	.impact-page { background-color: var(--marron); color: var(--blanco-roto); min-height: 100vh; }
 	.content-wrapper { position: relative; z-index: 2; padding-bottom: 10rem; }
 	.impact-header { text-align: center; max-width: 800px; margin: 0 auto; padding: 12rem 2rem 8rem; }
 	.tagline { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--amarillo); margin-bottom: 1.5rem; font-weight: 600; }
@@ -388,16 +418,22 @@ import Layout from '../layouts/Layout.astro';
 	.section-num { font-family: var(--font-display); font-size: 2rem; color: var(--turquesa); font-weight: 600; display: block; margin-bottom: 0.5rem; }
 	.section-header h2 { font-size: 3rem; margin-bottom: 1rem; color: var(--blanco-roto); }
 	.section-header p { font-size: 1.1rem; opacity: 0.6; max-width: 600px; color: var(--blanco-roto); }
+	
+	/* Para el bloque 3, forzamos 3 columnas */
 	.data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
 	.data-grid.three-cols { grid-template-columns: repeat(3, 1fr); }
-	.chart-card { padding: 3rem; border-radius: 40px; display: flex; flex-direction: column; color: var(--marron); background-color: var(--blanco-roto); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
-	.chart-card h3 { font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--marron); }
-	.chart-desc { font-size: 0.9rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.5; color: var(--marron); }
-	.canvas-container { position: relative; flex-grow: 1; display: flex; align-items: center; justify-content: center; max-height: 300px; }
-	.small-canvas { max-height: 260px; }
+	
+	.chart-card { padding: 2.5rem; border-radius: 40px; display: flex; flex-direction: column; color: var(--marron); background-color: var(--blanco-roto); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+	.chart-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--marron); }
+	.chart-desc { font-size: 0.85rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.5; color: var(--marron); }
+	
+	.canvas-container { position: relative; flex-grow: 1; display: flex; align-items: center; justify-content: center; max-height: 300px; width: 100%; }
+	.small-canvas { max-height: 250px; }
 	.chart-card canvas { max-width: 100%; max-height: 100%; }
+	
 	.fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
 	.fade-in.is-visible { opacity: 1; transform: translateY(0); }
+	
 	@media (max-width: 1024px) {
 		.data-grid, .data-grid.three-cols { grid-template-columns: 1fr; gap: 2rem; }
 		.impact-header h1 { font-size: 3.5rem; }
@@ -405,19 +441,29 @@ import Layout from '../layouts/Layout.astro';
 	}
 </style>
 <style is:global>
-	/* Forzar header oscuro solo en Impact */
+	/* Forzar Header marrón SOLO en la página de Impact */
 	body:has(.impact-page) header {
 		background-color: var(--marron);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Línea sutil clarita */
 	}
 	
-	/* Cambiar color de los enlaces y el texto de Log in */
+	/* Cambiar los enlaces del menú a color claro para que se lean */
 	body:has(.impact-page) header nav a, 
 	body:has(.impact-page) header #auth-trigger {
 		color: var(--blanco-roto);
 	}
 
-	/* El botón de Customize en Impact (para que contraste) */
+	/* Efecto hover de los enlaces */
+	body:has(.impact-page) header nav a:hover { 
+		color: var(--turquesa); 
+	}
+
+	/* Como el fondo es oscuro, cambiamos el logo marrón por uno blanco */
+	body:has(.impact-page) header .logo-img {
+		filter: brightness(0) invert(1); 
+	}
+
+	/* El botón de Customize para que destaque sobre el fondo marrón */
 	body:has(.impact-page) header .btn-nav {
 		background-color: var(--turquesa);
 		color: var(--marron);
