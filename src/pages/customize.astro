@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="Customize | Arethé Physis Studios">
+<Layout title="Customize | Arethe Physis Studios">
 	<main class="customizer">
 		
 		<aside class="options-panel">
@@ -13,7 +13,6 @@ import Layout from '../layouts/Layout.astro';
 			<div class="control-group">
 				<span class="control-label">00. Garment</span>
 				<div class="garment-selector">
-					<!-- IDENTIFICADORES: V11 MOCKUPS -->
 					<button class="garment-btn active" data-img="[ V11 - T-Shirt Base ]">T-Shirt</button>
 					<button class="garment-btn" data-img="[ V11 - Tote Bag Base ]">Tote Bag</button>
 					<button class="garment-btn" data-img="[ V11 - Pants Base ]">Pants</button>
@@ -23,18 +22,10 @@ import Layout from '../layouts/Layout.astro';
 			<div class="control-group">
 				<span class="control-label">01. Select Patch</span>
 				<div class="patches-grid">
-					<button class="patch-option" data-src="[ Patch 01 ]" data-price="5">
-						<span class="patch-text">Patch 01</span>
-					</button>
-					<button class="patch-option" data-src="[ Patch 02 ]" data-price="5">
-						<span class="patch-text">Patch 02</span>
-					</button>
-					<button class="patch-option" data-src="[ Patch 03 ]" data-price="5">
-						<span class="patch-text">Patch 03</span>
-					</button>
-					<button class="patch-option" data-src="[ Patch 04 ]" data-price="5">
-						<span class="patch-text">Patch 04</span>
-					</button>
+					<button class="patch-option" data-src="[ Patch 01 ]"><span class="patch-text">Patch 01</span></button>
+					<button class="patch-option" data-src="[ Patch 02 ]"><span class="patch-text">Patch 02</span></button>
+					<button class="patch-option" data-src="[ Patch 03 ]"><span class="patch-text">Patch 03</span></button>
+					<button class="patch-option" data-src="[ Patch 04 ]"><span class="patch-text">Patch 04</span></button>
 				</div>
 			</div>
 
@@ -60,11 +51,9 @@ import Layout from '../layouts/Layout.astro';
 
 		<section class="preview-area">
 			<div class="garment-container" id="canvas">
-				<!-- IDENTIFICADOR BASE INICIAL -->
 				<div id="base-garment" class="garment-img placeholder-bg">
 					<span id="base-text">[ V11 - T-Shirt Base ]</span>
 				</div>
-				<!-- El parche interactivo -->
 				<div id="preview-patch" class="preview-patch" style="display: none;">
 					<span class="patch-content"></span>
 				</div>
@@ -82,7 +71,7 @@ import Layout from '../layouts/Layout.astro';
 		const baseText = document.getElementById('base-text');
 		const patchOptions = document.querySelectorAll('.patch-option');
 		const garmentBtns = document.querySelectorAll('.garment-btn');
-		const garmentSelector = document.querySelector('.garment-selector'); // Para ocultarlo si venimos de un producto
+		const garmentSelector = document.querySelector('.garment-selector'); 
 		const zoneBtns = document.querySelectorAll('.zone-btn');
 		const sizeSlider = document.getElementById('size-slider');
 		const previewPatch = document.getElementById('preview-patch');
@@ -91,7 +80,7 @@ import Layout from '../layouts/Layout.astro';
 
 		let currentPatchSrc = null;
 		let currentSize = 60;
-		let activeProduct = null; // Aquí guardaremos el producto si venimos de la colección
+		let activeProduct = null; 
 
 		const zonePositions = {
 			left: { left: '35%', top: '35%' },
@@ -99,17 +88,14 @@ import Layout from '../layouts/Layout.astro';
 			right: { left: '65%', top: '35%' }
 		};
 
-		// LÓGICA PARA LEER LA URL
 		const urlParams = new URLSearchParams(window.location.search);
 		const productId = urlParams.get('id');
 
 		if (productId) {
 			activeProduct = products.find(p => p.id == productId);
 			if (activeProduct) {
-				// Ocultamos el selector de prenda porque el usuario ya ha elegido una
 				if (garmentSelector) garmentSelector.style.display = 'none';
 				
-				// Cargamos la prenda base según el tipo
 				if (activeProduct.type === 'bag') {
 					baseText.textContent = '[ V11 - Tote Bag Base ]';
 				} else if (activeProduct.type === 'pants') {
@@ -134,10 +120,9 @@ import Layout from '../layouts/Layout.astro';
 			updateSize();
 		}
 
-		// Selector de prenda (solo funciona si NO venimos de un producto)
 		garmentBtns.forEach(btn => {
 			btn.addEventListener('click', () => {
-				if (activeProduct) return; // Bloqueado si venimos de la colección
+				if (activeProduct) return; 
 				garmentBtns.forEach(b => b.classList.remove('active'));
 				btn.classList.add('active');
 				baseText.textContent = btn.getAttribute('data-img');
@@ -170,7 +155,6 @@ import Layout from '../layouts/Layout.astro';
 			updateSize();
 		});
 
-		// Arrastre
 		let isDragging = false;
 		let offsetX = 0;
 		let offsetY = 0;
@@ -213,7 +197,7 @@ import Layout from '../layouts/Layout.astro';
 			previewPatch.style.display = 'none';
 		});
 
-		// GUARDAR EN EL CARRITO
+		// GUARDAR EN EL CARRITO CON LÓGICA VIP
 		const btnCustomSave = document.getElementById('btn-custom-save');
 		btnCustomSave.addEventListener('click', () => {
 			if (!currentPatchSrc) {
@@ -229,42 +213,60 @@ import Layout from '../layouts/Layout.astro';
 			const topPercent = (centerY / canvasRect.height) * 100;
 			
 			let finalTitle = "";
-			let finalPrice = "";
-			let baseImg = baseText.textContent;
 			let basePriceNum = 0;
+			let baseImg = baseText.textContent;
 
-			// Si venimos de un producto real (ej. Product 4)
 			if (activeProduct) {
 				finalTitle = `${activeProduct.title} + ${currentPatchSrc}`;
 				basePriceNum = parseFloat(activeProduct.price.replace(/[^0-9.]/g, '')) || 0;
-				baseImg = activeProduct.images ? activeProduct.images[0] : activeProduct.img; // Guardamos la foto real
+				
+				// AQUÍ APLICAMOS EL DESCUENTO AL PRECIO BASE
+				if (activeProduct.discount) {
+					basePriceNum = basePriceNum * (1 - (activeProduct.discount / 100));
+				}
+				
+				baseImg = activeProduct.images ? activeProduct.images[0] : activeProduct.img;
 			} else {
 				finalTitle = `Custom Garment + ${currentPatchSrc}`;
-				basePriceNum = 85; // Precio base por defecto
+				basePriceNum = 85;
 			}
 
-			// Sumamos el coste del parche (5€)
-			const patchPrice = 5;
-			finalPrice = `€${(basePriceNum + patchPrice).toFixed(2)}`;
+			// --- LÓGICA DEL PARCHE GRATIS ---
+			let currentUser = null;
+			try { currentUser = JSON.parse(localStorage.getItem('arethe_user')); } catch(e) {}
+
+			let patchPrice = 5;
+			const userOrders = (currentUser && currentUser.ordersCount !== undefined) ? parseInt(currentUser.ordersCount) : 0;
+			const hasUsedFreePatch = localStorage.getItem('arethe_free_patch_used') === 'true';
+
+			if (currentUser && userOrders >= 3 && !hasUsedFreePatch) {
+				patchPrice = 0;
+				localStorage.setItem('arethe_free_patch_used', 'true');
+				setTimeout(() => { alert("🌟 VIP Reward: Your 3+ purchases have unlocked a ONE-TIME FREE patch!"); }, 100);
+			}
+
+			const finalPriceNum = basePriceNum + patchPrice;
+			const finalPrice = `€${finalPriceNum.toFixed(2)}`;
 
 			const item = {
 				id: 'custom-' + Date.now(),
 				title: finalTitle,
 				price: finalPrice,
 				isCustom: true,
-				baseGarment: baseImg, // Guardamos la imagen real aquí
-				baseTextLabel: baseText.textContent, // Guardamos el texto por si acaso
+				baseGarment: baseImg, 
+				baseTextLabel: baseText.textContent, 
 				patchSrc: currentPatchSrc,
 				patchLeft: leftPercent,
 				patchTop: topPercent,
 				patchScale: currentSize / 60
+				// OJO: NO PONEMOS 'discount' AQUÍ, PORQUE YA LO HEMOS APLICADO EN basePriceNum
 			};
 
-			let cart = JSON.parse(localStorage.getItem('Arethé_cart')) || [];
+			let cart = JSON.parse(localStorage.getItem('arethe_cart')) || [];
 			cart.push(item);
-			localStorage.setItem('Arethé_cart', JSON.stringify(cart));
+			localStorage.setItem('arethe_cart', JSON.stringify(cart));
 
-			btnCustomSave.textContent = 'Added to Cart!';
+			btnCustomSave.textContent = patchPrice === 0 ? 'Added (Free Patch!)' : 'Added to Cart!';
 			btnCustomSave.style.backgroundColor = 'var(--turquesa)';
 			btnCustomSave.style.color = 'var(--marron)';
 			
@@ -284,52 +286,34 @@ import Layout from '../layouts/Layout.astro';
 	.panel-header p { font-size: 0.85rem; color: #888; margin-bottom: 3rem; line-height: 1.5; }
 	.control-group { margin-bottom: 2.5rem; }
 	.control-label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; color: #AAA; margin-bottom: 1rem; }
-
 	.garment-selector { display: flex; gap: 0.5rem; }
 	.garment-btn { flex: 1; padding: 0.8rem 0.5rem; background-color: #F8F9FA; border: 1px solid #EAEAEA; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: #666; cursor: pointer; transition: all 0.2s; }
 	.garment-btn.active { background-color: var(--marron); color: white; border-color: var(--marron); }
-
 	.patches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
 	.patch-option { background-color: #F8F9FA; border: 1px solid transparent; border-radius: 12px; padding: 1rem; cursor: pointer; aspect-ratio: 1/1; transition: all 0.2s; display: flex; justify-content: center; align-items: center; }
 	.patch-text { font-size: 0.8rem; font-weight: 600; color: #888; }
 	.patch-option:hover { background-color: white; border-color: #EAEAEA; }
 	.patch-option.selected { border-color: var(--turquesa); background-color: white; }
 	.patch-option.selected .patch-text { color: var(--marron); }
-
 	.zones-grid { display: flex; gap: 0.5rem; }
 	.zone-btn { flex: 1; background-color: #F8F9FA; border: 1px solid transparent; padding: 0.6rem; border-radius: 8px; font-size: 0.8rem; color: #666; cursor: pointer; transition: all 0.2s; }
 	.zone-btn:hover { background-color: white; border-color: #EAEAEA; }
 	.zone-btn.active { background-color: var(--marron); color: white; border-color: var(--marron); }
-
 	input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; }
 	input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: var(--turquesa); cursor: pointer; margin-top: -8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 	input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #EAEAEA; border-radius: 2px; }
-
 	.actions { display: flex; flex-direction: column; gap: 1rem; margin-top: auto; }
 	.btn-clear, .btn-save { padding: 1rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-align: center; }
 	.btn-clear { background-color: transparent; color: #888; border: 1px solid #EAEAEA; }
 	.btn-save { background-color: var(--marron); color: white; border: none; }
 	.btn-save:hover { background-color: var(--turquesa); color: var(--marron); }
-
 	.preview-area { display: flex; justify-content: center; align-items: center; padding: 4rem; }
 	.garment-container { position: relative; max-width: 500px; width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.08); background-color: white; overflow: hidden; }
-	
 	.placeholder-bg { width: 100%; aspect-ratio: 3/4; background-color: var(--beige); display: flex; justify-content: center; align-items: center; }
 	#base-text { font-size: 1rem; font-weight: 600; color: var(--marron); letter-spacing: 1px; text-align: center; }
-
-	.preview-patch {
-		position: absolute; width: 80px; height: 80px;
-		left: 50%; top: 50%;
-		transform: translate(-50%, -50%) scale(1);
-		transform-origin: center center; z-index: 10;
-		background-color: var(--amarillo);
-		border: 2px dashed var(--marron);
-		border-radius: 50%;
-		display: flex; justify-content: center; align-items: center;
-	}
+	.preview-patch { position: absolute; width: 80px; height: 80px; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); transform-origin: center center; z-index: 10; background-color: var(--amarillo); border: 2px dashed var(--marron); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 	.patch-content { font-size: 0.7rem; font-weight: 600; color: var(--marron); text-align: center; }
 	.preview-patch:hover { cursor: grab; outline: 2px solid var(--turquesa); outline-offset: 4px; }
-
 	@media (max-width: 900px) {
 		.customizer { grid-template-columns: 1fr; }
 		.options-panel { border-right: none; border-bottom: 1px solid #EAEAEA; padding: 2rem; }

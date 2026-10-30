@@ -3,8 +3,7 @@
 ---
 <header>
 	<a href="/" class="logo">
-		<!-- Asegúrate de que el nombre coincide con el archivo de tu carpeta public -->
-		<img src="/logo-color.svg" alt="Arethé" class="logo-img" />
+		<img src="/logo-brown.svg" alt="Arethe Physis Studios" class="logo-img" />
 	</a>
 	<nav>
 		<a href="/collection">Collection</a>
@@ -14,7 +13,6 @@
 		<a href="/contact">Contact</a>
 		<a href="/cart">Cart</a>
 		
-		<!-- BOTÓN DE LOGIN -->
 		<a href="#" id="auth-trigger" class="login-link">
 			<span id="auth-text">Log in</span>
 		</a>
@@ -23,26 +21,43 @@
 	</nav>
 </header>
 
-<!-- MODAL DE LOGIN (Oculto por defecto) -->
+<!-- MODAL DE LOGIN / REGISTRO -->
 <div id="auth-modal" class="auth-modal" style="display: none;">
 	<div class="auth-content">
 		<button id="close-auth" class="close-btn">&times;</button>
 		<h2 id="modal-title">Welcome back</h2>
-		<p id="modal-desc">Sign in to save your custom designs and track your orders.</p>
+		<p id="modal-desc">Sign in to save your designs and track your orders.</p>
 		
 		<form id="auth-form">
 			<div id="form-fields">
 				<input type="text" id="user-name" placeholder="Your Name" required />
 				<input type="email" id="user-email" placeholder="Email Address" required />
+				<input type="password" id="user-password" placeholder="Password" required />
+				
+				<div id="register-extra-fields" style="display: none; flex-direction: column; gap: 1rem;">
+					<input type="date" id="user-birthday" placeholder="Birthday" />
+					<label style="display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #666; cursor: pointer;">
+						<input type="checkbox" id="user-newsletter" />
+						Subscribe to our Newsletter (+75 🌿)
+					</label>
+				</div>
 			</div>
+			
 			<button type="submit" id="btn-submit-auth" class="btn-auth">Sign In</button>
 			<button type="button" id="btn-logout" class="btn-logout" style="display: none;">Log Out</button>
+			
+			<a href="#" id="toggle-auth-mode" style="display: block; margin-top: 1rem; font-size: 0.8rem; color: var(--turquesa); text-decoration: underline;">
+				Don't have an account? Register
+			</a>
 		</form>
 	</div>
 </div>
 
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
+		// 🛑 PEGA TU URL AQUÍ
+		const API_URL = "https://script.google.com/macros/s/AKfycbxF9P94S19VemYJfcGZD4rREzdBLlXSM5R-01e8Z-CX9Mrj-LktFeI9gL9hG15PKoPc/exec"; 
+
 		const authTrigger = document.getElementById('auth-trigger');
 		const authText = document.getElementById('auth-text');
 		const authModal = document.getElementById('auth-modal');
@@ -50,60 +65,140 @@
 		const authForm = document.getElementById('auth-form');
 		const userNameInput = document.getElementById('user-name');
 		const userEmailInput = document.getElementById('user-email');
+		const userPasswordInput = document.getElementById('user-password');
 		const formFields = document.getElementById('form-fields');
 		const btnSubmitAuth = document.getElementById('btn-submit-auth');
 		const btnLogout = document.getElementById('btn-logout');
 		const modalTitle = document.getElementById('modal-title');
 		const modalDesc = document.getElementById('modal-desc');
+		const registerExtraFields = document.getElementById('register-extra-fields');
+		const userBirthdayInput = document.getElementById('user-birthday');
+		const userNewsletterInput = document.getElementById('user-newsletter');
+		const toggleAuthMode = document.getElementById('toggle-auth-mode');
 
-		// Comprobar si el usuario ya está logueado
-		let currentUser = JSON.parse(localStorage.getItem('Arethé_user')) || null;
+		let isRegisterMode = false;
+		let currentUser = JSON.parse(localStorage.getItem('arethe_user')) || null;
+
+		// Función JSONP para conectar con Google
+		function jsonpRequest(url) {
+			return new Promise((resolve, reject) => {
+				const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
+				window[callbackName] = (data) => {
+					delete window[callbackName];
+					document.body.removeChild(script);
+					resolve(data);
+				};
+				const script = document.createElement('script');
+				script.src = `${url}&callback=${callbackName}`;
+				script.onerror = reject;
+				document.body.appendChild(script);
+			});
+		}
 
 		function updateUI() {
 			if (currentUser) {
-				authText.textContent = `Hi, ${currentUser.name.split(' ')[0]}`;
+				const userLaurels = (currentUser.laurels !== undefined) ? currentUser.laurels : 0;
+				
+				authText.innerHTML = `Hi, ${currentUser.name.split(' ')[0]} <span style="color:var(--turquesa);font-weight:bold;margin-left:5px;">🌿 ${userLaurels}</span>`;
+				authTrigger.href = "/account";
+				
 				formFields.style.display = 'none';
+				registerExtraFields.style.display = 'none';
 				btnSubmitAuth.style.display = 'none';
 				btnLogout.style.display = 'block';
 				modalTitle.textContent = `Hello, ${currentUser.name}`;
-				modalDesc.textContent = `Logged in as ${currentUser.email}`;
+				modalDesc.innerHTML = `Status: <strong>VIP Member</strong> | Laurels: <strong>${userLaurels} 🌿</strong>`;
+				toggleAuthMode.style.display = 'none';
 			} else {
 				authText.textContent = 'Log in';
+				authTrigger.href = "#";
+				
 				formFields.style.display = 'flex';
+				registerExtraFields.style.display = isRegisterMode ? 'flex' : 'none';
 				btnSubmitAuth.style.display = 'block';
 				btnLogout.style.display = 'none';
-				modalTitle.textContent = 'Welcome to Arethé';
-				modalDesc.textContent = 'Sign in to save your custom designs and track your orders.';
+				toggleAuthMode.style.display = 'block';
+				modalTitle.textContent = isRegisterMode ? 'Create an Account' : 'Welcome back';
+				modalDesc.textContent = isRegisterMode ? 'Join the community and get 75 Laurels for free.' : 'Sign in to save your designs and track orders.';
+				btnSubmitAuth.textContent = isRegisterMode ? 'Register' : 'Sign In';
+				toggleAuthMode.textContent = isRegisterMode ? 'Already have an account? Log in' : 'Don\'t have an account? Register';
 			}
 		}
 
 		updateUI();
 
-		// Abrir/Cerrar Modal
-		authTrigger.addEventListener('click', (e) => {
+		// --- SINCRONIZACIÓN EN SEGUNDO PLANO AL CARGAR LA PÁGINA ---
+		if (currentUser) {
+			const syncUrl = `${API_URL}?action=sync_user&email=${currentUser.email}`;
+			
+			jsonpRequest(syncUrl).then(data => {
+				if (data.status === 'success') {
+					// Si los laureles o pedidos en la nube son distintos a los locales, actualizamos
+					if (currentUser.laurels !== data.user.laurels || currentUser.ordersCount !== data.user.ordersCount) {
+						currentUser = data.user;
+						localStorage.setItem('arethe_user', JSON.stringify(currentUser));
+						updateUI(); // Refrescamos la interfaz
+						console.log("Laurels sincronizados desde Google Sheets.");
+					}
+				}
+			}).catch(err => console.log("Error al sincronizar en 2do plano", err));
+		}
+
+		toggleAuthMode.addEventListener('click', (e) => {
 			e.preventDefault();
-			authModal.style.display = 'flex';
+			isRegisterMode = !isRegisterMode;
+			updateUI();
+		});
+
+		authTrigger.addEventListener('click', (e) => {
+			if (!currentUser) {
+				e.preventDefault();
+				authModal.style.display = 'flex';
+			}
 		});
 
 		closeAuth.addEventListener('click', () => {
 			authModal.style.display = 'none';
 		});
 
-		// Enviar Formulario (Fake Login)
-		authForm.addEventListener('submit', (e) => {
+		authForm.addEventListener('submit', async (e) => {
 			e.preventDefault();
-			const name = userNameInput.value;
-			const email = userEmailInput.value;
-			
-			currentUser = { name, email };
-			localStorage.setItem('Arethé_user', JSON.stringify(currentUser));
-			updateUI();
+			btnSubmitAuth.textContent = 'Processing...';
+			btnSubmitAuth.disabled = true;
+
+			const action = isRegisterMode ? 'register' : 'login';
+			const name = encodeURIComponent(userNameInput.value);
+			const email = encodeURIComponent(userEmailInput.value);
+			const password = encodeURIComponent(userPasswordInput.value);
+			const birthday = userBirthdayInput.value ? encodeURIComponent(userBirthdayInput.value) : '';
+			const newsletter = userNewsletterInput.checked;
+
+			const url = `${API_URL}?action=${action}&name=${name}&email=${email}&password=${password}&birthday=${birthday}&newsletter=${newsletter}`;
+
+			try {
+				const response = await jsonpRequest(url);
+				
+				if (response.status === 'success') {
+					currentUser = response.user;
+					localStorage.setItem('arethe_user', JSON.stringify(currentUser));
+					updateUI();
+					authModal.style.display = 'none';
+					userPasswordInput.value = '';
+				} else {
+					alert(response.message); 
+				}
+			} catch (error) {
+				console.error("Error", error);
+				alert("Connection error. Please try again.");
+			} finally {
+				btnSubmitAuth.textContent = isRegisterMode ? 'Register' : 'Sign In';
+				btnSubmitAuth.disabled = false;
+			}
 		});
 
-		// Cerrar Sesión
 		btnLogout.addEventListener('click', () => {
 			currentUser = null;
-			localStorage.removeItem('Arethé_user');
+			localStorage.removeItem('arethe_user');
 			updateUI();
 			authModal.style.display = 'none';
 		});
@@ -112,120 +207,41 @@
 
 <style>
 	header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1.5rem 3rem;
-		background-color: var(--blanco-roto);
-		border-bottom: 1px solid var(--beige);
-		position: sticky;
-		top: 0;
-		z-index: 100;
+		display: flex; justify-content: space-between; align-items: center;
+		padding: 1.5rem 3rem; background-color: var(--blanco-roto);
+		border-bottom: 1px solid var(--beige); position: sticky; top: 0; z-index: 100;
 	}
-
-	.logo {
-		font-family: var(--font-display);
-		font-size: 1.5rem;
-		font-weight: 600;
-		letter-spacing: -0.5px;
-	}
-
-	nav {
-		display: flex;
-		gap: 1.5rem;
-		align-items: center;
-		font-size: 0.9rem;
-		font-weight: 400;
-	}
-
-	nav a:hover {
-		color: var(--turquesa);
-		transition: color 0.2s ease;
-	}
-
-	.login-link {
-		font-weight: 600;
-		color: var(--marron);
-		opacity: 0.7;
-		transition: opacity 0.2s;
-	}
+	.logo-img { height: 80px; width: auto; display: block; transition: opacity 0.2s; margin: -40px 0; }
+	nav { display: flex; gap: 1.5rem; align-items: center; font-size: 0.9rem; font-weight: 400; }
+	nav a:hover { color: var(--turquesa); transition: color 0.2s ease; }
+	.login-link { font-weight: 600; color: var(--marron); opacity: 0.7; transition: opacity 0.2s; }
 	.login-link:hover { opacity: 1; }
+	.btn-nav { background-color: var(--marron); color: var(--blanco-roto); padding: 0.5rem 1.2rem; border-radius: 2rem; }
+	.btn-nav:hover { background-color: var(--turquesa); color: var(--marron); }
 
-	.btn-nav {
-		background-color: var(--marron);
-		color: var(--blanco-roto);
-		padding: 0.5rem 1.2rem;
-		border-radius: 2rem;
-	}
-	.btn-nav:hover {
-		background-color: var(--turquesa);
-		color: var(--marron);
-	}
-
-	/* MODAL AUTH */
 	.auth-modal {
-		position: fixed;
-		top: 0; left: 0; width: 100%; height: 100%;
-		background-color: rgba(64, 34, 17, 0.6);
-		backdrop-filter: blur(5px);
-		display: flex; justify-content: center; align-items: center;
-		z-index: 1000;
+		position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+		background-color: rgba(64, 34, 17, 0.6); backdrop-filter: blur(5px);
+		display: flex; justify-content: center; align-items: center; z-index: 1000;
 	}
 	.auth-content {
-		background-color: var(--blanco-roto);
-		padding: 3rem; border-radius: 24px;
-		width: 100%; max-width: 400px;
-		position: relative;
-		text-align: center;
-		box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-		animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		background-color: var(--blanco-roto); padding: 3rem; border-radius: 24px;
+		width: 100%; max-width: 400px; position: relative; text-align: center;
+		box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 	}
-	.close-btn {
-		position: absolute; top: 1rem; right: 1.5rem;
-		background: none; border: none; font-size: 1.5rem;
-		color: var(--marron); cursor: pointer; opacity: 0.5;
-	}
+	.close-btn { position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; font-size: 1.5rem; color: var(--marron); cursor: pointer; opacity: 0.5; }
 	.close-btn:hover { opacity: 1; }
 	.auth-content h2 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 0.5rem; }
 	.auth-content p { font-size: 0.9rem; opacity: 0.6; margin-bottom: 2rem; }
 	#form-fields { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-	#form-fields input {
-		width: 100%; padding: 1rem; border: 1px solid var(--beige);
-		border-radius: 8px; font-family: var(--font-body); font-size: 1rem; background-color: white;
+	#form-fields input[type="text"], #form-fields input[type="email"], #form-fields input[type="password"], #form-fields input[type="date"] {
+		width: 100%; padding: 1rem; border: 1px solid var(--beige); border-radius: 8px; font-family: var(--font-body); font-size: 1rem; background-color: white;
 	}
 	#form-fields input:focus { outline: none; border-color: var(--turquesa); }
-	
-	.btn-auth {
-		width: 100%; padding: 1rem; background-color: var(--marron); color: white;
-		border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer;
-		transition: background 0.3s;
-	}
+	.btn-auth { width: 100%; padding: 1rem; background-color: var(--marron); color: white; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; }
 	.btn-auth:hover { background-color: var(--turquesa); color: var(--marron); }
-	.btn-logout {
-		width: 100%; padding: 1rem; background-color: transparent; color: #d9534f;
-		border: 1px solid #d9534f; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer;
-	}
-	.logo-img {
-		height: 85px; 
-		width: auto;
-		display: block;
-		transition: opacity 0.2s;
-		margin: -40px 0; 
-	}
-	.logo-img:hover {
-		opacity: 0.8;
-	}
-
-	@keyframes popIn {
-		0% { transform: scale(0.95); opacity: 0; }
-		100% { transform: scale(1); opacity: 1; }
-	}
-
-	@media (max-width: 1024px) {
-		nav { gap: 1rem; }
-	}
-	@media (max-width: 768px) {
-		header { padding: 1rem; flex-direction: column; gap: 1rem; }
-		nav { flex-wrap: wrap; justify-content: center; gap: 0.8rem; }
-	}
+	.btn-logout { width: 100%; padding: 1rem; background-color: transparent; color: #d9534f; border: 1px solid #d9534f; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+	@keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+	@media (max-width: 1024px) { nav { gap: 1rem; } }
+	@media (max-width: 768px) { header { padding: 1rem; flex-direction: column; gap: 1rem; } nav { flex-wrap: wrap; justify-content: center; gap: 0.8rem; } }
 </style>

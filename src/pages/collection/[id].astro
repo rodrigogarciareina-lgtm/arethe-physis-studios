@@ -95,6 +95,23 @@ const { product } = Astro.props;
 	.btn-customize:hover { background-color: var(--marron); color: var(--turquesa); transform: translateY(-2px); }
 	.btn-cart { background-color: transparent; color: var(--marron); border: 1px solid var(--marron); }
 	.btn-cart:hover { background-color: var(--marron); color: var(--blanco-roto); }
+		/* SELLO DE DESCUENTO */
+	.sale-badge {
+		position: absolute;
+		top: 10%;
+		right: -10px;
+		background-color: #E53935; /* Color rojo de rebajas */
+		color: white;
+		padding: 0.4rem 1rem;
+		font-family: var(--font-body);
+		font-weight: 800;
+		font-size: 0.9rem;
+		transform: rotate(15deg); /* Inclinación horaria */
+		box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+		z-index: 15;
+		border-radius: 4px;
+		letter-spacing: 1px;
+	}
 	@media (max-width: 900px) {
 		.product-detail { grid-template-columns: 1fr; }
 		.image-section { padding: 2rem; }

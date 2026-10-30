@@ -1,0 +1,244 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="My Account | Arethe Physis Studios">
+	<main class="account-page">
+		
+		<!-- ESTADO 1: SI NO ESTÁ LOGUEADO -->
+		<div id="no-auth" class="empty-state" style="display: none;">
+			<h2>Access Denied</h2>
+			<p>Please log in to view your VIP account.</p>
+			<a href="/" class="btn">Back to Home</a>
+		</div>
+
+		<!-- ESTADO 2: SI ESTÁ LOGUEADO (El diseño ya está aquí) -->
+		<div id="auth-content" style="display: none;">
+			
+			<header class="profile-header">
+				<h1>Welcome, <span id="user-name-display" class="accent">User</span></h1>
+				
+				<div class="vip-stats">
+					<div class="stat-box">
+						<span class="stat-value">🌿 <span id="user-laurels">0</span></span>
+						<span class="stat-label">Laurels Balance</span>
+					</div>
+					<div class="stat-box">
+						<span class="stat-value" id="user-orders-count">0</span>
+						<span class="stat-label">Total Orders</span>
+					</div>
+					<div class="stat-box">
+						<span class="stat-value">VIP</span>
+						<span class="stat-label">Member Status</span>
+					</div>
+				</div>
+				
+				<button id="btn-logout-account" class="btn-logout-account">Log Out</button>
+			</header>
+
+			<section class="order-history">
+				<h2>Order History & Tracking</h2>
+				<div id="orders-list" class="orders-grid">
+					<p>Loading your orders...</p>
+				</div>
+			</section>
+
+		</div>
+
+	</main>
+</Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		// 🛑 PEGA TU URL AQUÍ
+		const API_URL = "https://script.google.com/macros/s/AKfycbxF9P94S19VemYJfcGZD4rREzdBLlXSM5R-01e8Z-CX9Mrj-LktFeI9gL9hG15PKoPc/exec"; 
+		
+		const currentUser = JSON.parse(localStorage.getItem('arethe_user'));
+		const noAuth = document.getElementById('no-auth');
+		const authContent = document.getElementById('auth-content');
+
+		// 1. COMPROBAR SI HAY USUARIO
+		if (!currentUser) {
+			noAuth.style.display = 'block';
+			return;
+		}
+
+		// 2. MOSTRAR CONTENIDO Y RELLENAR DATOS BÁSICOS
+		authContent.style.display = 'block';
+		document.getElementById('user-name-display').textContent = currentUser.name;
+		document.getElementById('user-laurels').textContent = currentUser.laurels || 0;
+		document.getElementById('user-orders-count').textContent = currentUser.ordersCount || 0;
+
+		// 3. BOTÓN DE LOGOUT
+		document.getElementById('btn-logout-account').addEventListener('click', () => {
+			localStorage.removeItem('arethe_user');
+			window.location.href = '/';
+		});
+
+		// 4. FUNCIÓN JSONP PARA PEDIR PEDIDOS
+		function jsonpRequest(url) {
+			return new Promise((resolve, reject) => {
+				const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
+				window[callbackName] = (data) => {
+					delete window[callbackName];
+					document.body.removeChild(script);
+					resolve(data);
+				};
+				const script = document.createElement('script');
+				script.src = `${url}&callback=${callbackName}`;
+				script.onerror = reject;
+				document.body.appendChild(script);
+			});
+		}
+
+		// 5. CARGAR PEDIDOS DESDE GOOGLE SHEETS
+		async function loadOrders() {
+			try {
+				const url = `${API_URL}?action=get_orders&email=${currentUser.email}`;
+				const data = await jsonpRequest(url);
+				const list = document.getElementById('orders-list');
+
+				if (data.status === 'success' && data.orders.length > 0) {
+					list.innerHTML = data.orders.map(order => `
+						<div class="order-card">
+							<div class="order-header">
+								<span class="order-id">${order.id}</span>
+								<span class="order-status ${order.status.toLowerCase()}">${order.status}</span>
+							</div>
+							<p class="order-date">Date: ${order.date}</p>
+							<p class="order-items">${order.items}</p>
+							<p class="order-total">Total: €${order.total}</p>
+						</div>
+					`).join('');
+				} else {
+					list.innerHTML = `<p>You haven't placed any orders yet. Go to the <a href="/collection" style="color:var(--turquesa);text-decoration:underline;">Collection</a>!</p>`;
+				}
+			} catch (error) {
+				console.error("Error al cargar pedidos:", error);
+				document.getElementById('orders-list').innerHTML = `<p>Could not load orders. Please check your connection.</p>`;
+			}
+		}
+
+		loadOrders();
+	});
+</script>
+
+<style>
+	/* CSS NORMAL (Astro lo aplicará perfectamente porque el HTML es estático) */
+	.account-page { 
+		padding: 8rem 5%; 
+		background-color: var(--blanco-roto); 
+		min-height: 100vh; 
+	}
+	
+	.profile-header { 
+		text-align: center; 
+		margin-bottom: 5rem; 
+	}
+	.profile-header h1 { 
+		font-size: 4rem; 
+		margin-bottom: 3rem; 
+	}
+	.accent { 
+		font-style: italic; 
+		color: var(--turquesa); 
+	}
+
+	.vip-stats { 
+		display: flex; 
+		justify-content: center; 
+		gap: 2rem; 
+		flex-wrap: wrap; 
+	}
+	.stat-box {
+		background-color: white; 
+		padding: 2rem 3rem; 
+		border-radius: 20px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+		min-width: 200px;
+		display: flex; 
+		flex-direction: column; 
+		align-items: center;
+	}
+	.stat-value { 
+		font-family: var(--font-display); 
+		font-size: 2.5rem; 
+		color: var(--marron); 
+		font-weight: 600; 
+		margin-bottom: 0.5rem; 
+	}
+	.stat-label { 
+		font-size: 0.8rem; 
+		text-transform: uppercase; 
+		letter-spacing: 1px; 
+		opacity: 0.5; 
+		font-weight: 600; 
+	}
+
+	.btn-logout-account {
+		margin-top: 2.5rem; 
+		padding: 0.8rem 2rem; 
+		background-color: transparent;
+		border: 1px solid #d9534f; 
+		color: #d9534f; 
+		border-radius: 50px;
+		font-size: 0.9rem; 
+		font-weight: 600; 
+		cursor: pointer; 
+		transition: all 0.3s;
+	}
+	.btn-logout-account:hover { 
+		background-color: #d9534f; 
+		color: white; 
+	}
+
+	.order-history { 
+		max-width: 800px; 
+		margin: 0 auto; 
+	}
+	.order-history h2 { 
+		font-size: 2rem; 
+		margin-bottom: 2rem; 
+		border-bottom: 1px solid var(--beige); 
+		padding-bottom: 1rem; 
+	}
+	
+	.orders-grid { 
+		display: flex; 
+		flex-direction: column; 
+		gap: 1.5rem; 
+	}
+	/* Los estilos del HTML inyectado por JS SÍ necesitan ser globales */
+	:global(.order-card) { 
+		background-color: white; 
+		padding: 2rem; 
+		border-radius: 20px; 
+		box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+	}
+	:global(.order-header) { 
+		display: flex; 
+		justify-content: space-between; 
+		margin-bottom: 1rem; 
+	}
+	:global(.order-id) { font-weight: 600; font-size: 1.1rem; }
+	:global(.order-status) { padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; background-color: #FFD980; color: var(--marron); }
+	:global(.order-date) { font-size: 0.9rem; opacity: 0.6; margin-bottom: 1rem; }
+	:global(.order-items) { font-size: 1rem; margin-bottom: 1rem; line-height: 1.5; }
+	:global(.order-total) { font-weight: 600; font-size: 1.2rem; text-align: right; color: var(--turquesa); }
+
+	.empty-state { 
+		text-align: center; 
+		padding: 10rem 0; 
+	}
+	.btn { 
+		display: inline-block; 
+		background-color: var(--marron); 
+		color: var(--blanco-roto); 
+		padding: 1rem 2rem; 
+		border-radius: 50px; 
+		margin-top: 2rem; 
+	}
+
+	@media (max-width: 768px) {
+		.profile-header h1 { font-size: 2.5rem; }
+	}
+</style>
