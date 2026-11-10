@@ -13,19 +13,53 @@ import Layout from '../layouts/Layout.astro';
 			<div class="control-group">
 				<span class="control-label">00. Garment</span>
 				<div class="garment-selector">
-					<button class="garment-btn active" data-img="[ V11 - T-Shirt Base ]">T-Shirt</button>
-					<button class="garment-btn" data-img="[ V11 - Tote Bag Base ]">Tote Bag</button>
-					<button class="garment-btn" data-img="[ V11 - Pants Base ]">Pants</button>
+					<button class="garment-btn active" data-img="[ V11 - T-Shirt Base ]">
+						<img src="/base-tshirt.png" alt="T-Shirt" class="garment-thumb" onerror="this.style.display='none'; this.parentElement.innerText='T-Shirt';" />
+					</button>
+					<button class="garment-btn" data-img="[ V11 - Tote Bag Base ]">
+						<img src="/base-tote.png" alt="Tote Bag" class="garment-thumb" onerror="this.style.display='none'; this.parentElement.innerText='Tote Bag';" />
+					</button>
+					<button class="garment-btn" data-img="[ V11 - Pants Base ]">
+						<img src="/base-pants.png" alt="Pants" class="garment-thumb" onerror="this.style.display='none'; this.parentElement.innerText='Pants';" />
+					</button>
 				</div>
 			</div>
 
 			<div class="control-group">
 				<span class="control-label">01. Select Patch</span>
 				<div class="patches-grid">
-					<button class="patch-option" data-src="[ Patch 01 ]"><span class="patch-text">Patch 01</span></button>
-					<button class="patch-option" data-src="[ Patch 02 ]"><span class="patch-text">Patch 02</span></button>
-					<button class="patch-option" data-src="[ Patch 03 ]"><span class="patch-text">Patch 03</span></button>
-					<button class="patch-option" data-src="[ Patch 04 ]"><span class="patch-text">Patch 04</span></button>
+					<!-- PARCHE 1 -->
+					<button class="patch-option" data-src="/patch-01.png">
+						<img src="/patch-01.png" alt="Patch 1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 01</span>';" />
+					</button>
+					<!-- PARCHE 2 -->
+					<button class="patch-option" data-src="/patch-02.png">
+						<img src="/patch-02.png" alt="Patch 2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 02</span>';" />
+					</button>
+					<!-- PARCHE 3 -->
+					<button class="patch-option" data-src="/patch-03.png">
+						<img src="/patch-03.png" alt="Patch 3" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 03</span>';" />
+					</button>
+					<!-- PARCHE 4 -->
+					<button class="patch-option" data-src="/patch-04.png">
+						<img src="/patch-04.png" alt="Patch 4" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 04</span>';" />
+					</button>
+					<!-- PARCHE 5 -->
+					<button class="patch-option" data-src="/patch-05.png">
+						<img src="/patch-05.png" alt="Patch 5" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 05</span>';" />
+					</button>
+					<!-- PARCHE 6 -->
+					<button class="patch-option" data-src="/patch-06.png">
+						<img src="/patch-06.png" alt="Patch 6" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 06</span>';" />
+					</button>
+					<!-- PARCHE 7 -->
+					<button class="patch-option" data-src="/patch-07.png">
+						<img src="/patch-07.png" alt="Patch 7" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 07</span>';" />
+					</button>
+					<!-- PARCHE 8 -->
+					<button class="patch-option" data-src="/patch-08.png">
+						<img src="/patch-08.png" alt="Patch 8" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 08</span>';" />
+					</button>
 				</div>
 			</div>
 
@@ -287,12 +321,60 @@ import Layout from '../layouts/Layout.astro';
 	.garment-selector { display: flex; gap: 0.5rem; }
 	.garment-btn { flex: 1; padding: 0.8rem 0.5rem; background-color: #F8F9FA; border: 1px solid #EAEAEA; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: #666; cursor: pointer; transition: all 0.2s; }
 	.garment-btn.active { background-color: var(--marron); color: white; border-color: var(--marron); }
-	.patches-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
-	.patch-option { background-color: #F8F9FA; border: 1px solid transparent; border-radius: 12px; padding: 1rem; cursor: pointer; aspect-ratio: 1/1; transition: all 0.2s; display: flex; justify-content: center; align-items: center; }
-	.patch-text { font-size: 0.8rem; font-weight: 600; color: #888; }
-	.patch-option:hover { background-color: white; border-color: #EAEAEA; }
-	.patch-option.selected { border-color: var(--turquesa); background-color: white; }
-	.patch-option.selected .patch-text { color: var(--marron); }
+	.patches-grid { 
+		display: grid; 
+		grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+		gap: 0.5rem; 
+	}
+	
+	.patch-option { 
+		background-color: #F8F9FA; 
+		border: 1px solid transparent; 
+		border-radius: 8px; 
+		padding: 0.5rem; 
+		cursor: pointer; 
+		aspect-ratio: 1/1; 
+		transition: all 0.2s; 
+		display: flex; 
+		justify-content: center; 
+		align-items: center; 
+	}
+	
+	.patch-text { 
+		font-size: 0.65rem; 
+		font-weight: 600; 
+		color: #888; 
+		text-align: center;
+	}
+	
+	.patch-option:hover { 
+		background-color: white; 
+		border-color: #EAEAEA; 
+	}
+	
+	.patch-option.selected { 
+		border-color: var(--turquesa); 
+		background-color: white; 
+	}
+	
+	.patch-option.selected .patch-text { 
+		color: var(--marron); 
+	}
+
+	/* Para que las imágenes de los parches quepan bien */
+	.patch-option img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	/* Para que las imágenes de los 3 templates se vean bien */
+	.garment-thumb {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		border-radius: 6px;
+	}
 	.zones-grid { display: flex; gap: 0.5rem; }
 	.zone-btn { flex: 1; background-color: #F8F9FA; border: 1px solid transparent; padding: 0.6rem; border-radius: 8px; font-size: 0.8rem; color: #666; cursor: pointer; transition: all 0.2s; }
 	.zone-btn:hover { background-color: white; border-color: #EAEAEA; }

@@ -6,11 +6,16 @@ const year = new Date().getFullYear();
 	<div class="footer-content">
 		<p class="brand">Arethé Physis Studios &copy; {year}</p>
 		<p class="slogan">From waste to Virtue. By Nature.</p>
-		<div class="legal-links">
-			<a href="/contact">Contact</a> <!-- NUEVO ENLACE -->
+		<div class="social-links">
+			<a href="#" aria-label="Instagram"><img src="/ig-icon-menta.png" alt="Instagram" /></a>
+			<a href="#" aria-label="Facebook"><img src="/fb-icon-menta.png" alt="Facebook" /></a>
+			<a href="#" aria-label="LinkedIn"><img src="/in-icon-menta.png" alt="LinkedIn" /></a>
+			<a href="mailto:info@arethe.com" aria-label="Email"><img src="/mail-icon-menta.png" alt="Email" /></a>
+		</div>
+		<div class="legal-links" style="margin-top: 1.5rem;">
+			<a href="/contact">Contact</a>
 			<a href="/legal/privacy">Privacy</a>
 			<a href="/legal/terms">Terms</a>
-			<a href="https://instagram.com" target="_blank">Instagram</a>
 		</div>
 	</div>
 </footer>
@@ -45,4 +50,27 @@ const year = new Date().getFullYear();
 	.legal-links a:hover {
 		color: var(--turquesa);
 	}
+	.social-links {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+		margin-bottom: 1rem;
+	}
+	/* Por defecto, los iconos son menta */
+	.social-links img {
+		width: 24px;
+		height: 24px;
+		opacity: 0.8;
+		transition: opacity 0.3s, transform 0.3s;
+	}
+	.social-links a:hover img {
+		opacity: 1;
+		transform: translateY(-3px);
+	}
+
+	/* TRUCO: Si estamos en la Colección, sustituimos los archivos por los marrones */
+	body:has(.collection-page) .social-links a:nth-child(1) img { content: url('/ig-icon-marron.png'); }
+	body:has(.collection-page) .social-links a:nth-child(2) img { content: url('/fb-icon-marron.png'); }
+	body:has(.collection-page) .social-links a:nth-child(3) img { content: url('/in-icon-marron.png'); }
+	body:has(.collection-page) .social-links a:nth-child(4) img { content: url('/mail-icon-marron.png'); }
 </style>

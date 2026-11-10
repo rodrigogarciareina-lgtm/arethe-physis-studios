@@ -102,10 +102,22 @@ import { products } from '../data/products.js';
 	.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 5rem 3rem; justify-items: center; }
 	.product-card { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 260px; text-decoration: none; }
 	.card-visual { position: relative; width: 100%; aspect-ratio: 1 / 1; margin-bottom: 1.5rem; transition: filter 0.3s ease; }
-	.bubble { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; overflow: hidden; background-color: var(--beige); transition: border-radius 0.4s ease, box-shadow 0.4s ease; }
+	.bubble { 
+		position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; 
+		overflow: hidden; background-color: var(--beige); 
+		transition: border-radius 0.4s ease, box-shadow 0.4s ease; 
+		display: flex; /* Añadido para centrar el texto */
+		align-items: center;
+		justify-content: center;
+	}
 	.bubble img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-	.placeholder-text { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; color: var(--marron); text-align: center; padding: 1rem; }
-	.bubble.static { animation: breathe 6s ease-in-out infinite alternate; }
+	.placeholder-text { 
+		width: 100%; height: 100%; 
+		display: flex; justify-content: center; align-items: center; 
+		font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; 
+		color: var(--marron); text-align: center; padding: 1rem; 
+	}
 	.bubble.animated { animation-duration: 10s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
 	.bubble.animated.anim-0 { animation-name: syncCycleA, breathe; }
 	.bubble.animated.anim-1 { animation-name: syncCycleB, breathe; }

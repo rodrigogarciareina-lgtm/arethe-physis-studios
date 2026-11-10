@@ -12,6 +12,7 @@ import Layout from '../layouts/Layout.astro';
 
 		<section class="timeline">
 			
+			<!-- Paso 1 -->
 			<div class="step-row">
 				<div class="step-text">
 					<span class="step-num">01</span>
@@ -19,21 +20,23 @@ import Layout from '../layouts/Layout.astro';
 					<p>We hunt for high-quality second-hand garments, deadstock fabrics, and textile waste that would otherwise end up in landfills. Every piece has a past.</p>
 				</div>
 				<div class="step-visual beige-blob">
-					<span>[ V7-01 Source Illustration ]</span>
+					<img src="/process-source.png" class="process-img" onerror="this.style.display='none'" />
 				</div>
 			</div>
 
+			<!-- Paso 2 -->
 			<div class="step-row reverse">
 				<div class="step-text">
 					<span class="step-num">02</span>
 					<h2>Transform</h2>
-					<p>We deconstruct the garments, cut them up, and redesign them. We combine different textures and materials to give them a completely new life.</p>
+					<p>We deconstruct the garments, cut them up, and redesign them. We combine different textures and silhouettes to give them a completely new life.</p>
 				</div>
-				<div class="step-visual turquoise-blob">ma
-					<span>[ V7-02 Transform Illustration ]</span>
+				<div class="step-visual turquoise-blob">
+					<img src="/process-transform.png" class="process-img" onerror="this.style.display='none'" />
 				</div>
 			</div>
 
+			<!-- Paso 3 -->
 			<div class="step-row">
 				<div class="step-text">
 					<span class="step-num">03</span>
@@ -41,7 +44,7 @@ import Layout from '../layouts/Layout.astro';
 					<p>The final touch. We add custom patches, hand embroidery, and digital prints. You get a 1-of-1 piece that nobody else in the world owns.</p>
 				</div>
 				<div class="step-visual yellow-blob">
-					<span>[ V7-03 Personalize Illustration ]</span>
+					<img src="/process-personalize.png" class="process-img" onerror="this.style.display='none'" />
 				</div>
 			</div>
 
@@ -84,6 +87,12 @@ import Layout from '../layouts/Layout.astro';
 	.turquoise-blob { background-color: var(--turquesa); }
 	.yellow-blob { background-color: var(--amarillo); }
 
+	.process-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: inherit;
+	}
 	@keyframes morph {
 		0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
 		100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
