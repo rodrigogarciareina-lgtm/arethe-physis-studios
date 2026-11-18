@@ -1,0 +1,274 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Financial Projections | Arethe Physis Studios">
+	<main class="projections-page">
+		
+		<header class="page-header fade-in">
+			<span class="tagline">Investor Relations</span>
+			<h1>Financial <span class="accent">Projections.</span></h1>
+			<p>Our 5-year forecast demonstrates a clear path to profitability, driven by a highly scalable circular economy model.</p>
+		</header>
+
+		<!-- KPIs PRINCIPALES -->
+		<section class="kpi-grid fade-in">
+			<div class="kpi-card">
+				<span class="kpi-label">Initial Investment</span>
+				<h2 class="kpi-value">€15,000</h2>
+				<p class="kpi-desc">Startup bank loan to cover materials and launch.</p>
+			</div>
+			<div class="kpi-card highlight">
+				<span class="kpi-label">Break-Even Point</span>
+				<h2 class="kpi-value">58 items</h2>
+				<p class="kpi-desc">Units needed per month to cover all fixed costs.</p>
+			</div>
+			<div class="kpi-card">
+				<span class="kpi-label">Year 5 Net Profit</span>
+				<h2 class="kpi-value">€139,500</h2>
+				<p class="kpi-desc">With a cumulative profit of over €199,000.</p>
+			</div>
+		</section>
+
+		<!-- GRÁFICA 1: PROYECCIÓN A 5 AÑOS -->
+		<section class="chart-section fade-in">
+			<div class="section-text">
+				<h2>5-Year Financial Growth</h2>
+				<p>After a strategic initial investment in Year 1, our online model scales rapidly. By Year 3, we open our flagship store in Madrid, multiplying our revenue while keeping operational costs stable.</p>
+			</div>
+			<div class="canvas-container">
+				<canvas id="growthChart"></canvas>
+			</div>
+		</section>
+
+		<!-- GRÁFICA 2: UNIT ECONOMICS (DONUT) -->
+		<section class="chart-section reverse fade-in">
+			<div class="section-text">
+				<h2>Unit Economics</h2>
+				<p>We maintain a lean variable cost of just €22 per item. This allows us to offer premium, 1-of-1 streetwear at a €75 average price, generating a massive €53 profit margin per garment.</p>
+			</div>
+			<div class="canvas-container doughnut-container">
+				<canvas id="costChart"></canvas>
+			</div>
+		</section>
+
+	</main>
+</Layout>
+
+<script>
+	import { Chart, registerables } from 'chart.js';
+	Chart.register(...registerables);
+
+	document.addEventListener('DOMContentLoaded', () => {
+		// Animación Scroll
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-visible');
+					observer.unobserve(entry.target);
+				}
+			});
+		}, { threshold: 0.1 });
+		document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+		// Colores Arethé
+		const mint = '#6EE5BE';
+		const brown = '#402211';
+		const yellow = '#FFD980';
+		const beige = '#D9CECA';
+		const gold = '#B8860B';
+
+		Chart.defaults.font.family = "'Inter', sans-serif";
+		Chart.defaults.color = brown;
+
+		// 1. Gráfica de Crecimiento (Líneas)
+		const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+		new Chart(ctxGrowth, {
+			type: 'line',
+			data: {
+				labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+				datasets: [
+					{
+						label: 'Total Revenue',
+						data: [45000, 67500, 170000, 255000, 405000],
+						borderColor: mint,
+						backgroundColor: 'rgba(110, 229, 190, 0.1)',
+						borderWidth: 4,
+						fill: true,
+						tension: 0.4,
+						pointBackgroundColor: brown,
+						pointRadius: 5
+					},
+					{
+						label: 'Total Costs',
+						data: [49598, 59798, 164498, 203698, 265500],
+						borderColor: yellow,
+						borderWidth: 3,
+						borderDash: [5, 5],
+						tension: 0.4,
+						pointBackgroundColor: brown,
+						pointRadius: 4
+					},
+					{
+						label: 'Cumulative Profit',
+						data: [-4598, 3104, 8606, 59908, 199408],
+						borderColor: brown,
+						borderWidth: 3,
+						tension: 0.4,
+						pointBackgroundColor: '#FFF',
+						pointBorderColor: brown,
+						pointBorderWidth: 2,
+						pointRadius: 5
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				interaction: { mode: 'index', intersect: false },
+				plugins: {
+					legend: { 
+						position: 'top',
+						labels: { usePointStyle: true, pointStyle: 'circle', font: { size: 13 } }
+					},
+					tooltip: {
+						backgroundColor: 'rgba(64, 34, 17, 0.95)',
+						titleColor: yellow,
+						bodyColor: '#FFF',
+						padding: 12,
+						callbacks: {
+							label: (context) => `${context.dataset.label}: €${context.raw.toLocaleString()}`
+						}
+					}
+				},
+				scales: {
+					y: {
+						beginAtZero: true,
+						grid: { color: 'rgba(64, 34, 17, 0.05)' }
+					},
+					x: { grid: { display: false } }
+				}
+			}
+		});
+
+		// 2. Gráfica de Costes (Donut)
+		const ctxCost = document.getElementById('costChart').getContext('2d');
+		new Chart(ctxCost, {
+			type: 'doughnut',
+			data: {
+				labels: ['Sourcing (45.5%)', 'Patches & Embroidery (22.7%)', 'Eco-Packaging (11.4%)', 'Shipping (20.4%)'],
+				datasets: [{
+					data: [10, 5, 2.5, 4.5],
+					backgroundColor: [mint, gold, brown, beige],
+					borderWidth: 3,
+					borderColor: '#F9F8F6',
+					hoverOffset: 10
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				cutout: '70%',
+				plugins: {
+					legend: { 
+						position: 'bottom',
+						labels: { usePointStyle: true, pointStyle: 'circle', padding: 20 }
+					},
+					tooltip: {
+						backgroundColor: 'rgba(64, 34, 17, 0.95)',
+						titleColor: yellow,
+						bodyColor: '#FFF',
+						padding: 12,
+						callbacks: {
+							label: (context) => `€${context.raw.toFixed(2)} per item`
+						}
+					}
+				}
+			}
+		});
+	});
+</script>
+
+<style>
+	.projections-page {
+		background-color: var(--blanco-roto);
+		min-height: 100vh;
+		padding: 10rem 5% 8rem;
+	}
+
+	/* HEADER */
+	.page-header { text-align: center; max-width: 800px; margin: 0 auto 6rem; }
+	.tagline { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--marron); opacity: 0.5; margin-bottom: 1.5rem; font-weight: 600; }
+	.page-header h1 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -2px; }
+	.accent { font-style: italic; color: var(--turquesa); }
+	.page-header p { font-size: 1.2rem; opacity: 0.7; margin: 0 auto; max-width: 600px; }
+
+	/* KPI GRID */
+	.kpi-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+		max-width: 1100px;
+		margin: 0 auto 8rem;
+	}
+	.kpi-card {
+		background-color: white;
+		padding: 3rem 2rem;
+		border-radius: 24px;
+		text-align: center;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+		border: 1px solid rgba(64, 34, 17, 0.05);
+	}
+	.kpi-card.highlight {
+		background-color: var(--marron);
+		color: white;
+		transform: scale(1.05);
+		box-shadow: 0 20px 40px rgba(64, 34, 17, 0.15);
+	}
+	.kpi-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; opacity: 0.6; display: block; margin-bottom: 1rem; }
+	.kpi-value { font-family: var(--font-display); font-size: 3rem; margin-bottom: 0.5rem; }
+	.kpi-card.highlight .kpi-value { color: var(--amarillo); }
+	.kpi-desc { font-size: 0.9rem; opacity: 0.7; line-height: 1.5; }
+
+	/* CHARTS */
+	.chart-section {
+		max-width: 1100px;
+		margin: 0 auto 8rem;
+		display: grid;
+		grid-template-columns: 1fr 1.5fr;
+		gap: 4rem;
+		align-items: center;
+	}
+	.chart-section.reverse {
+		grid-template-columns: 1.5fr 1fr;
+	}
+	.chart-section.reverse .section-text { order: 2; }
+	.chart-section.reverse .canvas-container { order: 1; }
+
+	.section-text h2 { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--marron); }
+	.section-text p { font-size: 1.1rem; line-height: 1.8; opacity: 0.8; }
+
+	.canvas-container {
+		width: 100%;
+		height: 400px;
+		background-color: white;
+		padding: 2rem;
+		border-radius: 30px;
+		box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+	}
+	.doughnut-container { height: 450px; }
+
+	/* ANIMACIÓN */
+	.fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+	.fade-in.is-visible { opacity: 1; transform: translateY(0); }
+
+	@media (max-width: 900px) {
+		.page-header h1 { font-size: 3.5rem; }
+		.kpi-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+		.kpi-card.highlight { transform: scale(1); }
+		.chart-section, .chart-section.reverse { grid-template-columns: 1fr; gap: 2rem; }
+		.chart-section.reverse .section-text { order: 1; }
+		.chart-section.reverse .canvas-container { order: 2; }
+		.canvas-container { height: 300px; padding: 1rem; }
+		.doughnut-container { height: 350px; }
+	}
+</style>

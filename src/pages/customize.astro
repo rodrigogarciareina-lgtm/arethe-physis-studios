@@ -13,14 +13,14 @@ import Layout from '../layouts/Layout.astro';
 			<div class="control-group">
 				<span class="control-label">00. Garment</span>
 				<div class="garment-selector">
-					<button class="garment-btn active" data-img="[ V11 - T-Shirt Base ]">
-						<img src="/base-tshirt.png" alt="T-Shirt" class="garment-thumb" onerror="this.style.display='none'; this.parentElement.innerText='T-Shirt';" />
+					<button class="garment-btn active" data-img="/base-tshirt.png">
+						<img src="/base-tshirt.png" alt="T-Shirt" class="garment-thumb" />
 					</button>
-					<button class="garment-btn" data-img="[ V11 - Tote Bag Base ]">
-						<img src="/base-tote.png" alt="Tote Bag" class="garment-thumb" onerror="this.style.display='none'; this.parentElement.innerText='Tote Bag';" />
+					<button class="garment-btn" data-img="/base-tote.png">
+						<img src="/base-tote.png" alt="Tote Bag" class="garment-thumb" />
 					</button>
-					<button class="garment-btn" data-img="[ V11 - Pants Base ]">
-						<img src="/base-pants.png" alt="Pants" class="garment-thumb" onerror="this.style.display='none'; this.parentElement.innerText='Pants';" />
+					<button class="garment-btn" data-img="/base-pants.png">
+						<img src="/base-pants.png" alt="Pants" class="garment-thumb" />
 					</button>
 				</div>
 			</div>
@@ -28,38 +28,14 @@ import Layout from '../layouts/Layout.astro';
 			<div class="control-group">
 				<span class="control-label">01. Select Patch</span>
 				<div class="patches-grid">
-					<!-- PARCHE 1 -->
-					<button class="patch-option" data-src="/patch-01.png">
-						<img src="/patch-01.png" alt="Patch 1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 01</span>';" />
-					</button>
-					<!-- PARCHE 2 -->
-					<button class="patch-option" data-src="/patch-02.png">
-						<img src="/patch-02.png" alt="Patch 2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 02</span>';" />
-					</button>
-					<!-- PARCHE 3 -->
-					<button class="patch-option" data-src="/patch-03.png">
-						<img src="/patch-03.png" alt="Patch 3" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 03</span>';" />
-					</button>
-					<!-- PARCHE 4 -->
-					<button class="patch-option" data-src="/patch-04.png">
-						<img src="/patch-04.png" alt="Patch 4" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 04</span>';" />
-					</button>
-					<!-- PARCHE 5 -->
-					<button class="patch-option" data-src="/patch-05.png">
-						<img src="/patch-05.png" alt="Patch 5" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 05</span>';" />
-					</button>
-					<!-- PARCHE 6 -->
-					<button class="patch-option" data-src="/patch-06.png">
-						<img src="/patch-06.png" alt="Patch 6" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 06</span>';" />
-					</button>
-					<!-- PARCHE 7 -->
-					<button class="patch-option" data-src="/patch-07.png">
-						<img src="/patch-07.png" alt="Patch 7" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 07</span>';" />
-					</button>
-					<!-- PARCHE 8 -->
-					<button class="patch-option" data-src="/patch-08.png">
-						<img src="/patch-08.png" alt="Patch 8" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'patch-text\'>Patch 08</span>';" />
-					</button>
+					<button class="patch-option" data-src="/patch-01.png"><img src="/patch-01.png" alt="Patch 1" /></button>
+					<button class="patch-option" data-src="/patch-02.png"><img src="/patch-02.png" alt="Patch 2" /></button>
+					<button class="patch-option" data-src="/patch-03.png"><img src="/patch-03.png" alt="Patch 3" /></button>
+					<button class="patch-option" data-src="/patch-04.png"><img src="/patch-04.png" alt="Patch 4" /></button>
+					<button class="patch-option" data-src="/patch-05.png"><img src="/patch-05.png" alt="Patch 5" /></button>
+					<button class="patch-option" data-src="/patch-06.png"><img src="/patch-06.png" alt="Patch 6" /></button>
+					<button class="patch-option" data-src="/patch-07.png"><img src="/patch-07.png" alt="Patch 7" /></button>
+					<button class="patch-option" data-src="/patch-08.png"><img src="/patch-08.png" alt="Patch 8" /></button>
 				</div>
 			</div>
 
@@ -85,11 +61,12 @@ import Layout from '../layouts/Layout.astro';
 
 		<section class="preview-area">
 			<div class="garment-container" id="canvas">
+				<!-- CAMBIO AQUÍ: Ahora es una etiqueta <img> -->
 				<div id="base-garment" class="garment-img placeholder-bg">
-					<span id="base-text">[ V11 - T-Shirt Base ]</span>
+					<img id="main-garment-img" src="/base-tshirt.png" alt="Garment" class="main-garment-preview" />
 				</div>
 				<div id="preview-patch" class="preview-patch" style="display: none;">
-					<span class="patch-content"></span>
+					<img id="patch-img" src="" alt="Patch" />
 				</div>
 			</div>
 		</section>
@@ -101,15 +78,14 @@ import Layout from '../layouts/Layout.astro';
 	import { products } from '../data/products.js';
 
 	document.addEventListener('DOMContentLoaded', () => {
-		const baseGarment = document.getElementById('base-garment');
-		const baseText = document.getElementById('base-text');
+		const mainGarmentImg = document.getElementById('main-garment-img');
+		const patchImg = document.getElementById('patch-img');
 		const patchOptions = document.querySelectorAll('.patch-option');
 		const garmentBtns = document.querySelectorAll('.garment-btn');
 		const garmentSelector = document.querySelector('.garment-selector'); 
 		const zoneBtns = document.querySelectorAll('.zone-btn');
 		const sizeSlider = document.getElementById('size-slider');
 		const previewPatch = document.getElementById('preview-patch');
-		const patchContent = previewPatch.querySelector('.patch-content');
 		const btnClear = document.getElementById('btn-clear');
 
 		let currentPatchSrc = null;
@@ -125,17 +101,19 @@ import Layout from '../layouts/Layout.astro';
 		const urlParams = new URLSearchParams(window.location.search);
 		const productId = urlParams.get('id');
 
+		// Si venimos de un producto de la colección
 		if (productId) {
 			activeProduct = products.find(p => p.id == productId);
 			if (activeProduct) {
 				if (garmentSelector) garmentSelector.style.display = 'none';
 				
+				// Cargamos la imagen correcta según el tipo de producto
 				if (activeProduct.type === 'bag') {
-					baseText.textContent = '[ V11 - Tote Bag Base ]';
+					mainGarmentImg.src = '/base-tote.png';
 				} else if (activeProduct.type === 'pants') {
-					baseText.textContent = '[ V11 - Pants Base ]';
+					mainGarmentImg.src = '/base-pants.png';
 				} else {
-					baseText.textContent = '[ V11 - T-Shirt Base ]';
+					mainGarmentImg.src = '/base-tshirt.png';
 				}
 			}
 		}
@@ -149,21 +127,27 @@ import Layout from '../layouts/Layout.astro';
 				previewPatch.style.display = 'none';
 				return;
 			}
-			previewPatch.style.display = 'block';
-			patchContent.textContent = currentPatchSrc;
+			previewPatch.style.display = 'flex';
+			patchImg.src = currentPatchSrc;
 			updateSize();
 		}
 
+		// Cambiar de prenda base
 		garmentBtns.forEach(btn => {
 			btn.addEventListener('click', () => {
 				if (activeProduct) return; 
 				garmentBtns.forEach(b => b.classList.remove('active'));
 				btn.classList.add('active');
-				baseText.textContent = btn.getAttribute('data-img');
+				
+				// Actualizamos la imagen central
+				const newImgSrc = btn.getAttribute('data-img');
+				mainGarmentImg.src = newImgSrc;
+				
 				zoneBtns[1].click(); 
 			});
 		});
 
+		// Seleccionar parche
 		patchOptions.forEach(btn => {
 			btn.addEventListener('click', () => {
 				patchOptions.forEach(b => b.classList.remove('selected'));
@@ -173,6 +157,7 @@ import Layout from '../layouts/Layout.astro';
 			});
 		});
 
+		// Posiciones rápidas
 		zoneBtns.forEach(btn => {
 			btn.addEventListener('click', () => {
 				zoneBtns.forEach(b => b.classList.remove('active'));
@@ -189,6 +174,7 @@ import Layout from '../layouts/Layout.astro';
 			updateSize();
 		});
 
+		// Arrastrar parche
 		let isDragging = false;
 		let offsetX = 0;
 		let offsetY = 0;
@@ -231,7 +217,7 @@ import Layout from '../layouts/Layout.astro';
 			previewPatch.style.display = 'none';
 		});
 
-		// GUARDAR EN EL CARRITO
+		// Guardar en el carrito
 		const btnCustomSave = document.getElementById('btn-custom-save');
 		btnCustomSave.addEventListener('click', () => {
 			if (!currentPatchSrc) {
@@ -248,18 +234,16 @@ import Layout from '../layouts/Layout.astro';
 			
 			let finalTitle = "";
 			let basePriceNum = 0;
-			let baseImg = baseText.textContent;
+			let baseImg = mainGarmentImg.src; // Cogemos la URL de la imagen
 
 			if (activeProduct) {
-				finalTitle = `${activeProduct.title} + ${currentPatchSrc}`;
+				finalTitle = `${activeProduct.title} + Patch`;
 				basePriceNum = parseFloat(activeProduct.price.replace(/[^0-9.]/g, '')) || 0;
-				baseImg = activeProduct.images ? activeProduct.images[0] : activeProduct.img;
 			} else {
-				finalTitle = `Custom Garment + ${currentPatchSrc}`;
+				finalTitle = `Custom Garment + Patch`;
 				basePriceNum = 85;
 			}
 
-			// LÓGICA DEL PARCHE GRATIS
 			let currentUser = null;
 			try { currentUser = JSON.parse(localStorage.getItem('arethe_user')); } catch(e) {}
 
@@ -273,21 +257,20 @@ import Layout from '../layouts/Layout.astro';
 				setTimeout(() => { alert("🌟 VIP Reward: Your 3+ purchases have unlocked a ONE-TIME FREE patch!"); }, 100);
 			}
 
-			// CÁLCULO DE PRECIOS (CON Y SIN DESCUENTO)
-			const oldTotal = basePriceNum + patchPrice; // Precio original
+			const oldTotal = basePriceNum + patchPrice;
 			const discountPercent = activeProduct ? activeProduct.discount : 0;
 			const discountMultiplier = discountPercent ? (1 - (discountPercent / 100)) : 1;
-			const newTotal = oldTotal * discountMultiplier; // Precio con descuento
+			const newTotal = oldTotal * discountMultiplier;
 
 			const item = {
 				id: 'custom-' + Date.now(),
 				title: finalTitle,
 				price: `€${newTotal.toFixed(2)}`,
-				oldPrice: discountPercent ? `€${oldTotal.toFixed(2)}` : null, // Solo guardamos oldPrice si hay descuento
+				oldPrice: discountPercent ? `€${oldTotal.toFixed(2)}` : null,
 				discount: discountPercent,
 				isCustom: true,
 				baseGarment: baseImg, 
-				baseTextLabel: baseText.textContent, 
+				baseTextLabel: "Custom Garment",
 				patchSrc: currentPatchSrc,
 				patchLeft: leftPercent,
 				patchTop: topPercent,
@@ -318,102 +301,57 @@ import Layout from '../layouts/Layout.astro';
 	.panel-header p { font-size: 0.85rem; color: #888; margin-bottom: 3rem; line-height: 1.5; }
 	.control-group { margin-bottom: 2.5rem; }
 	.control-label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; color: #AAA; margin-bottom: 1rem; }
+
 	.garment-selector { display: flex; gap: 0.5rem; }
-	.garment-btn { flex: 1; padding: 0.8rem 0.5rem; background-color: #F8F9FA; border: 1px solid #EAEAEA; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: #666; cursor: pointer; transition: all 0.2s; }
-	.garment-btn.active { background-color: var(--marron); color: white; border-color: var(--marron); }
-	.patches-grid { 
-		display: grid; 
-		grid-template-columns: repeat(4, 1fr); /* 4 columnas */
-		gap: 0.5rem; 
-	}
-	
-	.patch-option { 
-		background-color: #F8F9FA; 
-		border: 1px solid transparent; 
-		border-radius: 8px; 
-		padding: 0.5rem; 
-		cursor: pointer; 
-		aspect-ratio: 1/1; 
-		transition: all 0.2s; 
-		display: flex; 
-		justify-content: center; 
-		align-items: center; 
-	}
-	
-	.patch-text { 
-		font-size: 0.65rem; 
-		font-weight: 600; 
-		color: #888; 
-		text-align: center;
-	}
-	
-	.patch-option:hover { 
-		background-color: white; 
-		border-color: #EAEAEA; 
-	}
-	
-	.patch-option.selected { 
-		border-color: var(--turquesa); 
-		background-color: white; 
-	}
-	
-	.patch-option.selected .patch-text { 
-		color: var(--marron); 
-	}
+	.garment-btn { flex: 1; padding: 0.5rem; background-color: #F8F9FA; border: 2px solid transparent; border-radius: 8px; cursor: pointer; transition: all 0.2s; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; }
+	.garment-btn.active { border-color: var(--marron); background-color: #F9F8F6; }
+	.garment-thumb { width: 100%; height: 100%; object-fit: contain; }
 
-	/* Para que las imágenes de los parches quepan bien */
-	.patch-option img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-	}
+	.patches-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+	.patch-option { background-color: #F8F9FA; border: 2px solid transparent; border-radius: 8px; padding: 0.5rem; cursor: pointer; aspect-ratio: 1/1; transition: all 0.2s; display: flex; justify-content: center; align-items: center; }
+	.patch-option img { width: 100%; height: 100%; object-fit: contain; }
+	.patch-option:hover { background-color: white; }
+	.patch-option.selected { border-color: var(--turquesa); background-color: white; }
 
-	/* Para que las imágenes de los 3 templates se vean bien */
-	.garment-thumb {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		border-radius: 6px;
-	}
 	.zones-grid { display: flex; gap: 0.5rem; }
 	.zone-btn { flex: 1; background-color: #F8F9FA; border: 1px solid transparent; padding: 0.6rem; border-radius: 8px; font-size: 0.8rem; color: #666; cursor: pointer; transition: all 0.2s; }
 	.zone-btn:hover { background-color: white; border-color: #EAEAEA; }
 	.zone-btn.active { background-color: var(--marron); color: white; border-color: var(--marron); }
+
 	input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; }
 	input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: var(--turquesa); cursor: pointer; margin-top: -8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 	input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #EAEAEA; border-radius: 2px; }
+
 	.actions { display: flex; flex-direction: column; gap: 1rem; margin-top: auto; }
 	.btn-clear, .btn-save { padding: 1rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-align: center; }
 	.btn-clear { background-color: transparent; color: #888; border: 1px solid #EAEAEA; }
 	.btn-save { background-color: var(--marron); color: white; border: none; }
 	.btn-save:hover { background-color: var(--turquesa); color: var(--marron); }
+
 	.preview-area { display: flex; justify-content: center; align-items: center; padding: 4rem; }
-	.garment-container { position: relative; max-width: 500px; width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.08); background-color: white; overflow: hidden; }
+	.garment-container { position: relative; max-width: 600px; width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.08); background-color: white; overflow: hidden; }
+	
 	.placeholder-bg { width: 100%; aspect-ratio: 3/4; background-color: var(--beige); display: flex; justify-content: center; align-items: center; }
-	#base-text { font-size: 1rem; font-weight: 600; color: var(--marron); letter-spacing: 1px; text-align: center; }
-	.preview-patch { position: absolute; width: 80px; height: 80px; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1); transform-origin: center center; z-index: 10; background-color: var(--amarillo); border: 2px dashed var(--marron); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
-	.patch-content { font-size: 0.7rem; font-weight: 600; color: var(--marron); text-align: center; }
-	.preview-patch:hover { cursor: grab; outline: 2px solid var(--turquesa); outline-offset: 4px; }
+	
+	/* ESTILO PARA LA IMAGEN PRINCIPAL */
+	.main-garment-preview {
+		width: 100%;
+		height: 100%;
+		object-fit: cover; 
+	}
+
+	.preview-patch {
+		position: absolute; width: 80px; height: 80px;
+		left: 50%; top: 50%;
+		transform: translate(-50%, -50%) scale(1);
+		transform-origin: center center; z-index: 10;
+		cursor: grab;
+	}
+	.preview-patch img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
+
 	@media (max-width: 900px) {
 		.customizer { grid-template-columns: 1fr; }
 		.options-panel { border-right: none; border-bottom: 1px solid #EAEAEA; padding: 2rem; }
 		.preview-area { padding: 2rem; }
-	}
-	@media (max-width: 900px) {
-		.customizer {
-			grid-template-columns: 1fr;
-		}
-		.options-panel {
-			border-right: none;
-			border-bottom: 1px solid #EAEAEA;
-			padding: 2rem 1.5rem;
-		}
-		.preview-area {
-			padding: 2rem 1.5rem;
-			min-height: 50vh;
-		}
-		.patches-grid {
-			grid-template-columns: repeat(4, 1fr);
-		}
 	}
 </style>

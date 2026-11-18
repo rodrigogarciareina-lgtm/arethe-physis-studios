@@ -1,0 +1,112 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	return [
+		{ params: { slug: 'privacy' }, props: { title: 'Privacy Policy' } },
+		{ params: { slug: 'terms' }, props: { title: 'Terms of Service' } }
+	];
+}
+
+const { title } = Astro.props;
+---
+<Layout title={`${title} | Arethe Physis Studios`}>
+	<main class="legal-page">
+		<div class="legal-container">
+			<a href="/" class="back-link">&larr; Back to Home</a>
+			
+			<h1>{title}</h1>
+			<p class="last-updated">Last updated: November 2026</p>
+
+			<div class="content">
+				{title === 'Privacy Policy' ? (
+					<>
+						<h2>Your Data & Privacy</h2>
+						<p>We value your privacy and handle your personal details with complete care. When you shop with us or create an account, we only collect essential information—such as your name, shipping address, and email—to process your orders and deliver your 1-of-1 pieces. We never sell or share your data with third parties.</p>
+						
+						<h2>90-Day Active Session</h2>
+						<p>To keep your browsing seamless and remember your preferences, your login data remains with us for 90 days. After this period, it is securely erased for your personal safety.</p>
+						
+						<h2>Your Data Rights</h2>
+						<p>You are always in control of your information. If you ever want to review, update, or permanently delete your account data, simply send us an email and we will take care of it right away.</p>
+						
+						<h2>Cookie Policy</h2>
+						<p><strong>How We Use Cookies:</strong> We use simple, essential cookies to keep your shopping bag updated, remember your preferences, and maintain your 90-day login data. We also use minimal analytics cookies to see which collections our community loves most so we can keep improving your website experience. You can manage or turn off non-essential cookies in your browser settings at any time.</p>
+					</>
+				) : (
+					<>
+						<h2>1-of-1 Exclusivity & Upcycling</h2>
+						<p>Every item at Arethé Physis Studios is a unique, hand-upcycled creation made from rescued textiles and deadstock. Because of this handcrafted process, small variations in texture or distressing are a natural part of the garment’s story and circular character—making your piece truly one of a kind.</p>
+						
+						<h2>Shipping & Delivery</h2>
+						<p>We prepare each piece with care directly from our studio. Ready-to-wear items ship within a few business days, while custom-ordered studio pieces may take a little extra time to craft. You will receive a tracking link as soon as your order is on its way.</p>
+						
+						<h2>Returns & Exchanges</h2>
+						<p>Due to the limited and 1-of-1 nature of our collections, we offer returns or store credit on a case-by-case basis within 14 days of delivery. Items must be returned in their original condition.</p>
+					</>
+				)}
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	.legal-page {
+		background-color: var(--blanco-roto);
+		min-height: 100vh;
+		padding: 8rem 5%;
+	}
+
+	.legal-container {
+		max-width: 800px;
+		margin: 0 auto;
+		background-color: white;
+		padding: 4rem;
+		border-radius: 24px;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+	}
+
+	.back-link {
+		display: inline-block;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		opacity: 0.5;
+		margin-bottom: 3rem;
+		transition: opacity 0.3s;
+	}
+
+	.back-link:hover { opacity: 1; }
+
+	h1 {
+		font-size: 3rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.last-updated {
+		font-size: 0.9rem;
+		opacity: 0.5;
+		margin-bottom: 3rem;
+		border-bottom: 1px solid var(--beige);
+		padding-bottom: 2rem;
+	}
+
+	.content h2 {
+		font-size: 1.5rem;
+		margin-top: 2.5rem;
+		margin-bottom: 1rem;
+		color: var(--turquesa);
+	}
+
+	.content p {
+		font-size: 1.05rem;
+		line-height: 1.8;
+		opacity: 0.8;
+		margin-bottom: 1rem;
+	}
+
+	@media (max-width: 768px) {
+		.legal-container { padding: 2rem; }
+		h1 { font-size: 2.5rem; }
+	}
+</style>
